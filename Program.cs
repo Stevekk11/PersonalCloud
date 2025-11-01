@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using PersonalCloud.Data;
 using PersonalCloud.Services;
@@ -11,10 +12,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();;
 builder.Services.AddScoped<DocumentService>(provider =>
 {
     var context = provider.GetRequiredService<ApplicationDbContext>();
@@ -28,7 +29,14 @@ using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
 }
+var supportedCultures = new[] { "en", "cs" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("cs")
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 
+localizationOptions.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
+app.UseRequestLocalization(localizationOptions);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

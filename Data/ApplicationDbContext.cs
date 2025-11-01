@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder);
         builder.Entity<Document>().HasIndex(p => new { p.FileName }).HasDatabaseName("IX_FileName");
     }
 
