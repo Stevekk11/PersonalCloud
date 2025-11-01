@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using PersonalCloud.Data;
+using PersonalCloud.Helpers;
 using PersonalCloud.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();;
+builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddScoped<DocumentService>(provider =>
 {
     var context = provider.GetRequiredService<ApplicationDbContext>();
@@ -23,12 +25,15 @@ builder.Services.AddScoped<DocumentService>(provider =>
     var storageRoot = configuration.GetValue<string>("Storage:Root") ?? "UserDocs";
     return new DocumentService(context, storageRoot);
 });
+builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+//build the app
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
 }
+//add localization
 var supportedCultures = new[] { "en", "cs" };
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture("cs")
