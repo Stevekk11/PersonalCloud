@@ -1,0 +1,234 @@
+﻿@using System.Globalization
+@model PersonalCloud.Models.DocumentViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Moje Dokumenty"];
+    var culture = CultureInfo.CurrentUICulture.Name;
+}
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["UploadError"] != null)
+{
+    <div class="alert alert-danger">@TempData["UploadError"]</div>
+}
+
+<form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="mb-4" asp-route-culture="@culture">
+    <div class="mb-2">
+        <input type="file" name="file" class="form-control-file btn btn-info fw-bold" required/>
+    </div>
+    <button type="submit" class="btn btn-primary">@Localizer["Nahrát"]</button>
+    @Html.AntiForgeryToken()
+</form>
+
+@if (Model.DocumentsWithSignature.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>@Localizer["Název"]</th>
+            <th>@Localizer["Nahráno dne"]</th>
+            <th>@Localizer["Velikost (KB)"]</th>
+            <th>@Localizer["Možnosti"]</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.DocumentsWithSignature)
+        {
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        @{
+                            var type = item.Document.ContentType?.ToLower() ?? "";
+                            var iconClass = type == "application/pdf" ? "bi bi-file-earmark-pdf text-danger me-2"
+                                : type.StartsWith("image/") ? "bi bi-file-earmark-image text-info me-2"
+                                : type.StartsWith("audio/") ? "bi bi-vinyl text-primary me-2"
+                                : type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                  || type == "application/msword" ? "bi bi-file-earmark-word text-primary me-2"
+                                : type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                  || type == "application/vnd.ms-excel" ? "bi bi-file-earmark-excel text-success me-2"
+                                : type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                                  || type == "application/vnd.ms-powerpoint" ? "bi bi-file-earmark-ppt text-warning me-2"
+                                : type.StartsWith("video/") ? "bi bi-file-earmark-play text-danger me-2"
+                                : type.Contains("zip") || type.Contains("compressed") ? "bi bi-file-earmark-zip text-muted me-2"
+                                : "bi bi-file-earmark text-secondary me-2";
+
+                            // Previewable types
+                            var isPreviewable = type == "application/pdf"
+                                                || type == "text/plain"
+                                                || type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                || type == "application/msword";
+                        }
+                        <i class="@iconClass"></i>
+                        @item.Document.FileName
+
+                        @if (type == "application/pdf" && item.IsPdfSigned)
+                        {
+                            <i class="bi bi-check-circle-fill text-success ms-2"
+                               title="@Localizer["PDF je digitálně podepsán"]"
+                               data-bs-toggle="tooltip"
+                               style="cursor: pointer;"
+                               onclick="showSignatureInfo(@item.Document.Id)"></i>
+                        }
+
+                        @if (isPreviewable)
+                        {
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary ms-2"
+                                    onclick="showPreviewModal(@item.Document.Id, '@type', '@item.Document.FileName')">
+                                <i class="bi bi-eye"></i> @Localizer["Náhled"]
+                            </button>
+                        }
+                    </div>
+                </td>
+
+
+                <td>@item.Document.UploadedAt.ToLocalTime().ToString("g")</td>
+                <td>@(item.Document.FileSize / 1024)</td>
+                <td>
+                    <a asp-action="Download" asp-route-id="@item.Document.Id" asp-route-culture="@culture"
+                       class="btn btn-sm btn-success">@Localizer["Stáhnout"]
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@item.Document.Id" method="post" style="display:inline;" asp-route-culture="@culture">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('@Localizer["Smazat tento soubor?"]');">
+                            @Localizer["Smazat"]
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">@Localizer["Nic tu zatím není."]</div>
+}
+
+<!-- Modal for signature info -->
+<div class="modal fade" id="signatureModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Localizer["Informace o digitálním podpisu"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="signatureContent">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">@Localizer["Načítání..."]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">@Localizer["Náhled dokumentu"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="previewModalBody" style="min-height: 60vh;">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">@Localizer["Načítání..."]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        /**
+         * Shows the preview window.
+         * */
+        function showPreviewModal(documentId, type, fileName) {
+            $('#previewModalLabel').text('Náhled: ' + fileName);
+            $('#previewModalBody').html(`
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">@Localizer["Načítání..."]
+                </span>
+            </div>
+        </div>
+    `);
+
+            var previewUrl = '/Document/Preview?id=' + documentId;
+
+            $('#previewModal').modal('show');
+
+            setTimeout(function () {
+                let content = '';
+                if (type === 'application/pdf' ||
+                    type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+                    type === 'application/msword') {
+                    // Both PDF and Word documents will be displayed using the PDF viewer
+                    content = `<iframe src="${previewUrl}" width="100%" height="600px"></iframe>`;
+                } else if (type.startsWith('image/')) {
+                    content = `<img src="${previewUrl}" alt="@Localizer["Náhled obrázku"]" class="img-fluid" />`;
+                } else if (type.startsWith('text/')) {
+                    $.get(previewUrl, function (data) {
+                        $('#previewModalBody').html('<pre style="white-space: pre-wrap; word-break: break-all;">' + $('<div>').text(data).html() + '</pre>');
+                    }).fail(function () {
+                        $('#previewModalBody').html('<div class="alert alert-danger">@Localizer["Nepodařilo se načíst textový soubor."]</div>');
+                    });
+                    return;
+                } else {
+                    content = `<div class="alert alert-info">@Localizer["Náhled tohoto typu souboru není podporován."]</div>`;
+                }
+                $('#previewModalBody').html(content);
+            }, 400);
+        }
+
+        /**
+         * Displays modal with PDF signature information for a given document
+         * documentId - The ID of the document to show signature info for
+         */
+        function showSignatureInfo(documentId) {
+            $('#signatureModal').modal('show');
+            $('#signatureContent').html(`
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">@Localizer["Načítání..."]
+                </span>
+            </div>
+        </div>
+    `);
+
+            $.get('@Url.Action("GetPdfSignatureInfo")', {id: documentId})
+                .done(function (data) {
+                    let content = '<div class="alert alert-success">';
+                    content += '<i class="fas fa-check-circle"></i> @Localizer["PDF je digitálně podepsán"]';
+                    content += '</div>';
+
+                    if (data.signerName) {
+                        content += '<p><strong>@Localizer["Podepsáno"]:</strong> ' + data.signerName + '</p>';
+                    }
+                    if (data.signatureDate) {
+                        content += '<p><strong>@Localizer["Datum podpisu"]:</strong> ' + data.signatureDate + '</p>';
+                    }
+                    content += '<p><strong>@Localizer["Počet podpisů"]:</strong> ' + data.signatureCount + '</p>';
+
+                    $('#signatureContent').html(content);
+                })
+                .fail(function () {
+                    $('#signatureContent').html(`
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @Localizer["Nepodařilo se načíst informace o podpisu."]
+                </div>
+                    `);
+                });
+        }
+    </script>
+}

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace PersonalCloud.Models;
 
@@ -16,7 +17,7 @@ public class Document
     public int Id { get; set; }
     [Required, MaxLength(500)]
     public string? FileName { get; set; }
-    [Required]
+    [Required, MaxLength(100)]
     public string? ContentType { get; set; }
     [Required]
     public long FileSize { get; set; }
@@ -24,4 +25,6 @@ public class Document
     public string? StoragePath { get; set; }
     public DateTime UploadedAt { get; set; }
     public string? LoginId { get; set; }
+    [ForeignKey("LoginId")]
+    public IdentityUser? User { get; set; }
 }

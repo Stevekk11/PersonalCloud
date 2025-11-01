@@ -62,7 +62,7 @@ public class DocumentService
             .ToListAsync();
     }
 
-    public async Task<Document> GetDocumentAsync(int documentId, int loginId)
+    public async Task<Document> GetDocumentAsync(int documentId, string loginId)
     {
         return await _context.Documents.FirstOrDefaultAsync(d => d.Id == documentId && d.LoginId.Equals(loginId) ) ??
                throw new InvalidOperationException();
@@ -74,7 +74,7 @@ public class DocumentService
     /// <param name="documentId">The unique identifier of the document to be deleted.</param>
     /// <param name="loginId">The unique identifier of the user attempting to delete the document to ensure proper ownership validation.</param>
     /// <returns>A task representing the asynchronous operation, returning a boolean value indicating whether the deletion was successful or not.</returns>
-    public async Task<bool> DeleteDocumentAsync(int documentId, int loginId)
+    public async Task<bool> DeleteDocumentAsync(int documentId, string loginId)
     {
         var document = await GetDocumentAsync(documentId, loginId);
         if (document == null) return false;

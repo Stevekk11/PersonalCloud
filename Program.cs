@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PersonalCloud.Data;
+using PersonalCloud.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +12,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<DocumentService>(provider =>
+{
+    var context = provider.GetRequiredService<ApplicationDbContext>();
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var storageRoot = configuration.GetValue<string>("Storage:Root") ?? "UserDocs";
+    return new DocumentService(context, storageRoot);
+});
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

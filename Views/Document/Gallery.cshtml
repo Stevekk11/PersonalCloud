@@ -1,0 +1,207 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model PersonalCloud.Models.DocumentViewModel
+
+@{
+    ViewData["Title"] = Localizer["Galerie fotografií"];
+    var culture = CultureInfo.CurrentUICulture.Name;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">@ViewData["Title"]</h2>
+
+            @if (!Model.Documents.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    @Localizer["Zatím nemáte nahrané žádné obrázky."]
+                    <a href="@Url.Action("Index", new { culture = CultureInfo.CurrentUICulture.Name })" class="btn btn-primary btn-sm ms-2">
+                        @Localizer["Nahrát první obrázek"]
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="row g-3">
+                    @foreach (var doc in Model.Documents)
+                    {
+                        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                            <div class="card h-100 shadow-sm gallery-item"
+                                 data-id="@doc.Id"
+                                 style="cursor: pointer;">
+                                <div class="position-relative overflow-hidden" style="height: 200px;">
+                                    <img src="@Url.Action("Download", new { id = doc.Id })"
+                                         class="card-img-top h-100 object-fit-cover"
+                                         alt="@doc.FileName"
+                                         loading="lazy" asp-route-culture="@culture">
+                                    <div class="position-absolute top-0 end-0 p-2">
+                                        <span class="badge bg-dark bg-opacity-75">
+                                            @doc.ContentType.Split('/')[1].ToUpper()
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-2">
+                                    <h6 class="card-title text-truncate mb-1"
+                                        title="@doc.FileName">
+                                        @doc.FileName
+                                    </h6>
+                                    <small class="text-muted">
+                                        @doc.UploadedAt.ToString("dd.MM.yyyy")
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal pro detail obrázku -->
+<div class="modal fade" id="imageDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageDetailModalLabel">@Localizer["Detail fotografie"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">@Localizer["Načítání..."]</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="downloadBtn">
+                    <i class="fas fa-download"></i> @Localizer["Stáhnout"]
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    @Localizer["Zavřít"]
+                </button>
+                <button type="button" class="btn btn-danger" id="deleteBtn">
+                    <i class="fas fa-trash"></i> @Localizer["Smazat"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.gallery-item').click(function () {
+                const imageId = $(this).data('id');
+                loadImageDetails(imageId);
+            });
+
+            function loadImageDetails(imageId) {
+                $('#imageDetailModal').modal('show');
+                $('#modalContent').html(`
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">@Localizer["Načítání..."]</span>
+                </div>
+            </div>
+        `);
+
+                $.get('@Url.Action("GetImageDetails")', {id: imageId})
+                    .done(function (data) {
+                        const modalContent = `
+                    <div class="row">
+                        <div class="col-md-8">
+                            <img src="${data.downloadUrl}"
+                                 class="img-fluid rounded"
+                                 alt="${data.fileName}"
+                                 style="max-height: 400px; width: 100%; object-fit: contain;">
+                        </div>
+                         <div class="col-md-4">
+                            <h6>@Localizer["Informace o souboru"]</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>@Localizer["Název:"]</th>
+                                    <td class="text-break">${data.fileName}</td>
+                                </tr>
+                                <tr>
+                                    <th>@Localizer["Velikost:"]</th>
+                                    <td>${data.fileSize}</td>
+                                </tr>
+                                <tr>
+                                    <th>@Localizer["Typ:"]</th>
+                                    <td>${data.contentType}</td>
+                                </tr>
+                                <tr>
+                                    <th>@Localizer["Nahráno:"]</th>
+                                    <td>${data.uploadedAt}</td>
+                                </tr>
+                                 <tr>
+                                    <th>@Localizer["Rozměry:"]</th>
+                                    <td>${data.width} × ${data.height} px</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                        $('#modalContent').html(modalContent);
+                        $('#downloadBtn').off('click').on('click', function () {
+                            window.open(data.downloadUrl, '_blank');
+                        });
+                        $('#deleteBtn').off('click').on('click', function () {
+                            if (confirm('@Localizer["Opravdu chcete smazat tento obrázek?"]')) {
+                                deleteImage(data.id);
+                            }
+                        });
+                    })
+                    .fail(function () {
+                        $('#modalContent').html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        @Localizer["Nepodařilo se načíst detail obrázku."]
+                    </div>
+                `);
+                    });
+            }
+
+            function deleteImage(imageId) {
+                $.post('@Url.Action("Delete")', {
+                    id: imageId,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                })
+                    .done(function () {
+                        $('#imageDetailModal').modal('hide');
+                        location.reload();
+                    })
+                    .fail(function () {
+                        alert('@Localizer["Nepodařilo se smazat obrázek."]');
+                    });
+            }
+
+
+
+        });
+    </script>
+}
+
+<style>
+    .gallery-item:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .gallery-item:hover .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .object-fit-contain {
+        object-fit: contain;
+    }
+</style>
