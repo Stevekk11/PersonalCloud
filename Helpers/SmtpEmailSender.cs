@@ -27,7 +27,7 @@ public class SmtpEmailSender : IEmailSender
         {
             await client.ConnectAsync(
                 _configuration["Email:Smtp:Host"],
-                int.Parse(_configuration["Email:Smtp:Port"]));
+                int.Parse(_configuration["Email:Smtp:Port"] ?? throw new InvalidOperationException("Port cannot be null.")));
 
             await client.AuthenticateAsync(
                 _configuration["Email:Smtp:Username"],
@@ -37,7 +37,7 @@ public class SmtpEmailSender : IEmailSender
             message.From.Add(new MailboxAddress("Cloudové úložiště - potvrzení emailu", _configuration["Email:From"]));
             message.To.Add(new MailboxAddress(email, email));
             message.Subject = subject;
-            message.Body = new TextPart("html") { Text = htmlMessage };
+            message.Body = new TextPart("html") { Text = htmlMessage + "<br><br><p style='color: #666; font-size: 12px;'>Děkujeme, že používáte naše cloudové úložiště.<br>S přáním hezkého dne,<br>Stevek 😘😘</p>" };
 
             await client.SendAsync(message);
             await client.DisconnectAsync(true);

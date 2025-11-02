@@ -1,5 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using System.Globalization
+<!DOCTYPE html>
 <html lang="en">
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    var culture = CultureInfo.CurrentUICulture.Name;
+}
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,22 +18,66 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PersonalCloud</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" asp-route-culture="@culture">@Localizer["Cloudové úložiště"]</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark d-flex align-items-center" asp-area="" asp-controller="Home"
+                           asp-action="Index" asp-route-culture="@culture">
+                            <i class="bi bi-house me-2"></i>
+                            @Localizer["Domů"]
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark d-flex align-items-center" asp-area="" asp-controller="Home"
+                           asp-action="Privacy" asp-route-culture="@culture">
+                            <i class="bi bi-shield-check me-2"></i>
+                            @Localizer["Ochrana soukromí"]
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Document" asp-action="Index">Moje soubory</a>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
+                           asp-action="Index" asp-route-culture="@culture">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            @Localizer["Moje soubory"]
+                        </a>
                     </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
+                           asp-action="Gallery" asp-route-culture="@culture">
+                            <i class="bi bi-images me-2"></i>
+                            @Localizer["Moje obrázky"]
+                        </a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
+                           asp-action="Music" asp-route-culture="@culture">
+                            <i class="bi bi-music-note-list me-2"></i>
+                            @Localizer["Přehrávač skladeb"]
+                        </a>
+                    </li>
+                    <div class="dropdown ms-auto nav-item d-flex align-items-center p-3">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-translate me-1"></i>
+                            @CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li>
+                                <a class="dropdown-item" href="?culture=en&ui-culture=en">
+                                    <i class="bi bi-flag me-1"></i> English
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="?culture=cs&ui-culture=cs">
+                                    <i class="bi bi-flag me-1"></i> Čeština
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>
@@ -41,9 +90,11 @@
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2025 - PersonalCloud - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<footer class="footer mt-auto py-3 bg-black text-white border-top">
+    <div class="container text-center">
+        <span class="fw-bold text-white">
+            @Localizer["&copy; 2025 SPŠE Ječná - Cloudové úložiště"] 🩷
+        </span>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
