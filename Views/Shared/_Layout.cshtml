@@ -11,8 +11,8 @@
     <title>@ViewData["Title"] - PersonalCloud</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/PersonalCloud.styles.css" asp-append-version="true"/>
 </head>
 <body>
 <header>
@@ -25,35 +25,35 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center btn btn-outline-primary m-2">
                         <a class="nav-link text-dark d-flex align-items-center" asp-area="" asp-controller="Home"
                            asp-action="Index" asp-route-culture="@culture">
                             <i class="bi bi-house me-2"></i>
                             @Localizer["Domů"]
                         </a>
                     </li>
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center btn btn-outline-danger m-2">
                         <a class="nav-link text-dark d-flex align-items-center" asp-area="" asp-controller="Home"
                            asp-action="Privacy" asp-route-culture="@culture">
                             <i class="bi bi-shield-check me-2"></i>
                             @Localizer["Ochrana soukromí"]
                         </a>
                     </li>
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center  btn btn-outline-success m-2">
                         <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
                            asp-action="Index" asp-route-culture="@culture">
                             <i class="bi bi-file-earmark-text me-2"></i>
                             @Localizer["Moje soubory"]
                         </a>
                     </li>
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center btn btn-outline-success m-2">
                         <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
                            asp-action="Gallery" asp-route-culture="@culture">
                             <i class="bi bi-images me-2"></i>
                             @Localizer["Moje obrázky"]
                         </a>
                     </li>
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center btn btn-outline-info m-2">
                         <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
                            asp-action="Music" asp-route-culture="@culture">
                             <i class="bi bi-music-note-list me-2"></i>
