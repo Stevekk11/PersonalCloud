@@ -27,6 +27,17 @@ public class DocumentService
     /// <returns>A task representing the asynchronous operation, with a Document object that contains the details of the uploaded document.</returns>
     public async Task<Document> AddDocumentAsync(string loginId, IFormFile file)
     {
+        var disallowedExtensions = new[]
+        {
+            ".cs", ".exe",".cshtml",".js"
+        };
+
+        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+        if (disallowedExtensions.Contains(fileExtension))
+        {
+            throw new ArgumentException($"File type '{fileExtension}' is not allowed for security reasons.");
+        }
         var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
         var storagePath = Path.Combine(_storageRoot, fileName);
 

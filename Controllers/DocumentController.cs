@@ -84,8 +84,25 @@ public class DocumentController : Controller
         }
 
         var userId = GetCurrentUserId();
-        await _documentService.AddDocumentAsync(userId, file);
-        _logger.LogInformation($"User {User.Identity.Name} uploaded a new document with name {file.FileName}.");
+        try
+        {
+            await _documentService.AddDocumentAsync(userId, file);
+            _logger.LogInformation($"User {User.Identity.Name} uploaded a new document with name {file.FileName}.");
+        }
+        catch (ArgumentException ex)
+        {
+
+            TempData["UploadError"] = ex.Message;
+            _logger.LogWarning(ex, "Upload blocked for user {User} with file {FileName}", User.Identity.Name, file.FileName);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error while uploading file {FileName} for user {User}", file.FileName, User.Identity.Name);
+            TempData["UploadError"] = "An unexpected error occurred while uploading the file.";
+            return RedirectToAction(nameof(Index));
+        }
+
         return RedirectToAction(nameof(Index));
     }
 

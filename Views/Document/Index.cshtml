@@ -11,6 +11,12 @@
 {
     <div class="alert alert-danger">@TempData["UploadError"]</div>
 }
+@if (TempData["UploadSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["UploadSuccess"]
+    </div>
+}
 
 <form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="mb-4" asp-route-culture="@culture">
     <div class="mb-2">
