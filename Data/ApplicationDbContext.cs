@@ -9,11 +9,11 @@ namespace PersonalCloud.Data;
 /// and managing entities such as user identities and custom models.
 /// </summary>
 /// <remarks>
-/// This class extends <see cref="Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext"/>,
+/// This class extends <see cref="Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext{TUser}"/>,
 /// enabling integration with ASP.NET Core Identity for user authentication and authorization.
 /// Additionally, it includes a DbSet for managing <see cref="PersonalCloud.Models.Document"/> entities.
 /// </remarks>
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Document> Documents { get; set; }
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
