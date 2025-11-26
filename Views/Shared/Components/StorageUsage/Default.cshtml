@@ -1,0 +1,30 @@
+@model PersonalCloud.ViewComponents.StorageUsageViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
+    var progressBarClass = Model.PercentageUsed >= 90 ? "bg-danger" 
+        : Model.PercentageUsed >= 70 ? "bg-warning" 
+        : "bg-success";
+}
+
+<div class="storage-usage-container d-flex align-items-center ms-3 me-3">
+    <i class="bi bi-cloud-fill me-2 text-primary"></i>
+    <div class="storage-progress-wrapper" style="min-width: 150px;">
+        <div class="progress" style="height: 20px;" title="@Model.UsedFormatted / @Model.MaxFormatted">
+            <div class="progress-bar @progressBarClass" 
+                 role="progressbar" 
+                 style="width: @Model.PercentageUsed.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)%;" 
+                 aria-valuenow="@Model.PercentageUsed.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+                @if (Model.PercentageUsed >= 15)
+                {
+                    <span class="small">@Model.PercentageUsed.ToString("0.#")%</span>
+                }
+            </div>
+        </div>
+        <small class="text-muted d-block text-center" style="font-size: 0.7rem;">
+            @Model.UsedFormatted / @Model.MaxFormatted
+        </small>
+    </div>
+</div>
