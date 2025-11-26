@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PersonalCloud.Models;
 using PersonalCloud.Services;
 
 namespace PersonalCloud.ViewComponents;
@@ -10,9 +11,9 @@ namespace PersonalCloud.ViewComponents;
 public class StorageUsageViewComponent : ViewComponent
 {
     private readonly DocumentService _documentService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public StorageUsageViewComponent(DocumentService documentService, UserManager<IdentityUser> userManager)
+    public StorageUsageViewComponent(DocumentService documentService, UserManager<ApplicationUser> userManager)
     {
         _documentService = documentService;
         _userManager = userManager;

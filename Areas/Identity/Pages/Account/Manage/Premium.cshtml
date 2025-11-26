@@ -1,0 +1,86 @@
+@page
+@model PremiumModel
+@{
+    ViewData["Title"] = "Premium Account";
+    ViewData["ActivePage"] = ManageNavPages.Premium;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Premium Status</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.IsPremium)
+                {
+                    <div class="alert alert-success" role="alert">
+                        <i class="bi bi-star-fill me-2"></i>
+                        <strong>You are a Premium user!</strong>
+                    </div>
+                    <p>You have access to all premium features.</p>
+                    <form method="post" asp-page-handler="Downgrade">
+                        <button type="submit" class="btn btn-warning">Downgrade from Premium</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        You currently have a standard account.
+                    </div>
+                    <p>Upgrade to Premium to unlock additional features!</p>
+                    
+                    @if (Model.CanUpgradeToPremium)
+                    {
+                        <form method="post" asp-page-handler="Upgrade">
+                            <button type="submit" class="btn btn-primary">Upgrade to Premium</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Premium accounts are currently unavailable due to storage capacity limits.
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">System Capacity</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Available Disk Space</td>
+                            <td><strong>@Model.AvailableDiskSpaceGB.ToString("F2") GB</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Maximum Premium Users</td>
+                            <td><strong>@Model.MaxPremiumUsers</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Current Premium Users</td>
+                            <td><strong>@Model.CurrentPremiumUsers</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Available Premium Slots</td>
+                            <td><strong>@Model.AvailablePremiumSlots</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-muted small">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Each premium account requires 50 GB of available disk space.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

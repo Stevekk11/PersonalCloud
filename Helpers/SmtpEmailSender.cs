@@ -15,32 +15,41 @@ namespace PersonalCloud.Helpers;
 public class SmtpEmailSender : IEmailSender
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<SmtpEmailSender> _logger;
 
-    public SmtpEmailSender(IConfiguration configuration)
+    public SmtpEmailSender(IConfiguration configuration, ILogger<SmtpEmailSender> logger)
     {
         _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        using (var client = new SmtpClient())
+        try
         {
-            await client.ConnectAsync(
-                _configuration["Email:Smtp:Host"],
-                int.Parse(_configuration["Email:Smtp:Port"] ?? throw new InvalidOperationException("Port cannot be null.")));
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(
+                    _configuration["Email:Smtp:Host"],
+                    int.Parse(_configuration["Email:Smtp:Port"] ?? throw new InvalidOperationException("Port cannot be null.")));
 
-            await client.AuthenticateAsync(
-                _configuration["Email:Smtp:Username"],
-                _configuration["Email:Smtp:Password"]);
+                await client.AuthenticateAsync(
+                    _configuration["Email:Smtp:Username"],
+                    _configuration["Email:Smtp:Password"]);
 
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Cloudové úložiště - potvrzení emailu", _configuration["Email:From"]));
-            message.To.Add(new MailboxAddress(email, email));
-            message.Subject = subject;
-            message.Body = new TextPart("html") { Text = htmlMessage + "<br><br><p style='color: #666; font-size: 12px;'>Děkujeme, že používáte naše cloudové úložiště.<br>S přáním hezkého dne,<br>Stevek 😘😘</p>" };
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Cloudové úložiště - potvrzení emailu", _configuration["Email:From"]));
+                message.To.Add(new MailboxAddress(email, email));
+                message.Subject = subject;
+                message.Body = new TextPart("html") { Text = htmlMessage + "<br><br><p style='color: #666; font-size: 12px;'>Děkujeme, že používáte naše cloudové úložiště.<br>S přáním hezkého dne,<br>Stevek 😘😘</p>" };
 
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to send email to {Email}. Email sending is disabled or SMTP server is not available.", email);
         }
     }
 }
