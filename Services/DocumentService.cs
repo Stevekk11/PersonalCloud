@@ -12,11 +12,28 @@ public class DocumentService
     private readonly ApplicationDbContext _context;
     private readonly string _storageRoot;
 
+    /// <summary>
+    /// Maximum storage allowed per user in bytes (10 GB).
+    /// </summary>
+    public const long MaxStoragePerUser = 10L * 1024 * 1024 * 1024;
+
     public DocumentService(ApplicationDbContext context, string storageRoot)
     {
         _context = context;
         _storageRoot = storageRoot;
         Directory.CreateDirectory(_storageRoot);
+    }
+
+    /// <summary>
+    /// Asynchronously calculates the total storage used by a specific user.
+    /// </summary>
+    /// <param name="loginId">The unique identifier of the user.</param>
+    /// <returns>A task representing the asynchronous operation, containing the total bytes used by the user.</returns>
+    public async Task<long> GetUserStorageUsedAsync(string loginId)
+    {
+        return await _context.Documents
+            .Where(d => d.LoginId == loginId)
+            .SumAsync(d => d.FileSize);
     }
 
     /// <summary>
@@ -38,6 +55,14 @@ public class DocumentService
         {
             throw new ArgumentException($"File type '{fileExtension}' is not allowed for security reasons.");
         }
+
+        // Check storage limit
+        var currentUsage = await GetUserStorageUsedAsync(loginId);
+        if (currentUsage + file.Length > MaxStoragePerUser)
+        {
+            throw new InvalidOperationException("Storage limit exceeded. You have reached the maximum storage capacity of 10 GB.");
+        }
+
         var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
         var storagePath = Path.Combine(_storageRoot, fileName);
 

@@ -96,6 +96,12 @@ public class DocumentController : Controller
             _logger.LogWarning(ex, "Upload blocked for user {User} with file {FileName}", User.Identity.Name, file.FileName);
             return RedirectToAction(nameof(Index));
         }
+        catch (InvalidOperationException ex)
+        {
+            TempData["UploadError"] = ex.Message;
+            _logger.LogWarning(ex, "Storage limit exceeded for user {User} with file {FileName}", User.Identity.Name, file.FileName);
+            return RedirectToAction(nameof(Index));
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error while uploading file {FileName} for user {User}", file.FileName, User.Identity.Name);
