@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace PersonalCloud.Models;
 
@@ -26,5 +25,5 @@ public class Document
     public DateTime UploadedAt { get; set; }
     public string? LoginId { get; set; }
     [ForeignKey("LoginId")]
-    public IdentityUser? User { get; set; }
+    public ApplicationUser? User { get; set; }
 }

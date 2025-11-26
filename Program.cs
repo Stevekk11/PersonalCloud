@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using PersonalCloud.Data;
 using PersonalCloud.Helpers;
+using PersonalCloud.Models;
 using PersonalCloud.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddScoped<DocumentService>(provider =>
@@ -27,6 +28,7 @@ builder.Services.AddScoped<DocumentService>(provider =>
     var storageRoot = configuration.GetValue<string>("Storage:Root") ?? "UserDocs";
     return new DocumentService(context, storageRoot);
 });
+builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
 
 // Configure max upload / request limits (5 GB)
 const long fiveGb = 5L * 1024 * 1024 * 1024;
