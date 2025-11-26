@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Moje Dokumenty" xml:space="preserve">
+    <value>Moje Dokumenty</value>
+  </data>
+  <data name="Nahrát" xml:space="preserve">
+    <value>Nahrát</value>
+  </data>
+  <data name="Název" xml:space="preserve">
+    <value>Název</value>
+  </data>
+  <data name="Nahráno dne" xml:space="preserve">
+    <value>Nahráno dne</value>
+  </data>
+  <data name="Velikost (KB)" xml:space="preserve">
+    <value>Velikost (KB)</value>
+  </data>
+  <data name="Možnosti" xml:space="preserve">
+    <value>Možnosti</value>
+  </data>
+  <data name="PDF je digitálně podepsán" xml:space="preserve">
+    <value>PDF je digitálně podepsán</value>
+  </data>
+  <data name="Náhled" xml:space="preserve">
+    <value>Náhled</value>
+  </data>
+  <data name="Stáhnout" xml:space="preserve">
+    <value>Stáhnout</value>
+  </data>
+  <data name="Smazat tento soubor?" xml:space="preserve">
+    <value>Smazat tento soubor?</value>
+  </data>
+  <data name="Smazat" xml:space="preserve">
+    <value>Smazat</value>
+  </data>
+  <data name="Nic tu zatím není." xml:space="preserve">
+    <value>Nic tu zatím není.</value>
+  </data>
+  <data name="Informace o digitálním podpisu" xml:space="preserve">
+    <value>Informace o digitálním podpisu</value>
+  </data>
+  <data name="Načítání..." xml:space="preserve">
+    <value>Načítání...</value>
+  </data>
+  <data name="Náhled dokumentu" xml:space="preserve">
+    <value>Náhled dokumentu</value>
+  </data>
+  <data name="Náhled obrázku" xml:space="preserve">
+    <value>Náhled obrázku</value>
+  </data>
+  <data name="Nepodařilo se načíst textový soubor." xml:space="preserve">
+    <value>Nepodařilo se načíst textový soubor.</value>
+  </data>
+  <data name="Náhled tohoto typu souboru není podporován." xml:space="preserve">
+    <value>Náhled tohoto typu souboru není podporován.</value>
+  </data>
+  <data name="Podepsáno" xml:space="preserve">
+    <value>Podepsáno</value>
+  </data>
+  <data name="Datum podpisu" xml:space="preserve">
+    <value>Datum podpisu</value>
+  </data>
+  <data name="Počet podpisů" xml:space="preserve">
+    <value>Počet podpisů</value>
+  </data>
+  <data name="Nepodařilo se načíst informace o podpisu." xml:space="preserve">
+    <value>Nepodařilo se načíst informace o podpisu.</value>
+  </data>
+</root>
+

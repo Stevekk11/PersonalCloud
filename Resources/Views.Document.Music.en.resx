@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Přehrávač skladeb" xml:space="preserve">
+    <value>Music player</value>
+  </data>
+  <data name="Nemáte žádné audio soubory mezi dokumety." xml:space="preserve">
+    <value>You don't have any audio files among your documents.</value>
+  </data>
+  <data name="Nahrát první zvuk" xml:space="preserve">
+    <value>Upload first sound</value>
+  </data>
+  <data name="Váš prohlížeč nepodporuje audio element." xml:space="preserve">
+    <value>Your browser does not support the audio element.</value>
+  </data>
+</root>
+

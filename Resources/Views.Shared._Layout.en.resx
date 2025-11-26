@@ -21,9 +21,6 @@
     <data name="Domů" xml:space="preserve">
         <value>Home</value>
     </data>
-    <data name="Křížovkářský slovník" xml:space="preserve">
-        <value>Crossword finder</value>
-    </data>
     <data name="Ochrana soukromí" xml:space="preserve">
         <value>Privacy policy</value>
     </data>
@@ -33,20 +30,11 @@
     <data name="Moje obrázky" xml:space="preserve">
         <value>Gallery</value>
     </data>
-    <data name="Kalendář" xml:space="preserve">
-        <value>Calendar</value>
-    </data>
-    <data name="Odjezdy PID" xml:space="preserve">
-        <value>Prague Integrated Trasport</value>
-    </data>
-    <data name="Odhlásit se..." xml:space="preserve">
-        <value>Log out...</value>
+    <data name="Přehrávač skladeb" xml:space="preserve">
+        <value>Music Player</value>
     </data>
     <data name="&amp;copy; 2025 SPŠE Ječná - Cloudové úložiště" xml:space="preserve">
         <value>&amp;copy; 2025 Secondary School of Technical Engineering Jecna</value>
-    </data>
-    <data name="Přehrávač skladeb" xml:space="preserve">
-        <value>Music Player</value>
     </data>
     <data name="Cloudové úložiště" xml:space="preserve">
         <value>PersonalCloud</value>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Home Page" xml:space="preserve">
+    <value>Domovská stránka</value>
+  </data>
+  <data name="Vítejte, {0}" xml:space="preserve">
+    <value>Vítejte, {0}</value>
+  </data>
+  <data name="Toto je demo verze cloudového úložiště" xml:space="preserve">
+    <value>Toto je demo verze cloudového úložiště</value>
+  </data>
+</root>
+

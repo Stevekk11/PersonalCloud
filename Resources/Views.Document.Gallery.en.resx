@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Galerie fotografií" xml:space="preserve"><value>Photo gallery</value></data>
+  <data name="Zatím nemáte nahrané žádné obrázky." xml:space="preserve"><value>You have no images uploaded yet.</value></data>
+  <data name="Nahrát první obrázek" xml:space="preserve"><value>Upload first image</value></data>
+  <data name="Detail fotografie" xml:space="preserve"><value>Photo details</value></data>
+  <data name="Načítání..." xml:space="preserve"><value>Loading...</value></data>
+  <data name="Stáhnout" xml:space="preserve"><value>Download</value></data>
+  <data name="Zavřít" xml:space="preserve"><value>Close</value></data>
+  <data name="Smazat" xml:space="preserve"><value>Delete</value></data>
+  <data name="Informace o souboru" xml:space="preserve"><value>File information</value></data>
+  <data name="Název:" xml:space="preserve"><value>Name:</value></data>
+  <data name="Velikost:" xml:space="preserve"><value>Size:</value></data>
+  <data name="Typ:" xml:space="preserve"><value>Type:</value></data>
+  <data name="Nahráno:" xml:space="preserve"><value>Uploaded:</value></data>
+  <data name="Rozměry:" xml:space="preserve"><value>Dimensions:</value></data>
+  <data name="Opravdu chcete smazat tento obrázek?" xml:space="preserve"><value>Do you really want to delete this image?</value></data>
+  <data name="Nepodařilo se načíst detail obrázku." xml:space="preserve"><value>Failed to load image details.</value></data>
+  <data name="Nepodařilo se smazat obrázek." xml:space="preserve"><value>Failed to delete the image.</value></data>
+</root>

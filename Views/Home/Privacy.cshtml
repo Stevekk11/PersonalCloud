@@ -1,7 +1,7 @@
 ﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Ochrana soukromí";
+    ViewData["Title"] = Localizer["Ochrana soukromí"];
 }
 <h1 style="text-decoration: underline">@ViewData["Title"]</h1>
 
-<p style="font-size: 3em">@Localizer["Toto je školní projekt a nesdílí žádné informace s třetími stranami."]🙂</p>
+<p style="font-size: 3em">@Localizer["Toto je školní projekt a nesdílí žádné informace s třetími stranami."]😊</p>

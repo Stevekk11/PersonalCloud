@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="HelloUser" xml:space="preserve">
+    <value>Ahoj {0}!</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>Spravovat účet</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Odhlásit se</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrace</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Přihlášení</value>
+  </data>
+</root>
+

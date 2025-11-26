@@ -1,8 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Home Page"];
 }
 
 <div class="text-center">
-    <h1 class="display-4">Vítejte, @(User.Identity.Name ?? "uživateli😊")</h1>
-    <h2 class="text-warning text-lg-center">Toto je demo verze cloudového úložiště</h2>
+    <h1 class="display-4">@Localizer["Vítejte, {0}", User.Identity.Name ?? "uživateli😊"]</h1>
+    <h2 class="text-warning text-lg-center">@Localizer["Toto je demo verze cloudového úložiště"]</h2>
 </div>

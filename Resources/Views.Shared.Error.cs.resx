@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Při zpracování požadavku došlo k chybě.</value>
+  </data>
+  <data name="RequestIdLabel" xml:space="preserve">
+    <value>ID požadavku:</value>
+  </data>
+  <data name="DevelopmentModeTitle" xml:space="preserve">
+    <value>Vývojářský režim</value>
+  </data>
+  <data name="DevelopmentModeIntro" xml:space="preserve">
+    <value>Přepnutí do vývojářského prostředí zobrazí podrobnější informace o chybě, ke které došlo.</value>
+  </data>
+  <data name="DevelopmentModeWarning" xml:space="preserve">
+    <value>Vývojářské prostředí by nemělo být povoleno pro nasazené aplikace. Může vést k zobrazení citlivých informací z výjimek koncovým uživatelům. Pro lokální ladění povolte prostředí Development nastavením proměnné prostředí ASPNETCORE_ENVIRONMENT na hodnotu Development a restartujte aplikaci.</value>
+  </data>
+</root>
+

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Profile" xml:space="preserve"><value>Profil</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Password" xml:space="preserve"><value>Heslo</value></data>
+  <data name="Username" xml:space="preserve"><value>Uživatelské jméno</value></data>
+  <data name="Premium" xml:space="preserve"><value>Premium</value></data>
+  <data name="External logins" xml:space="preserve"><value>Externí přihlášení</value></data>
+  <data name="Two-factor authentication" xml:space="preserve"><value>Dvoufázové ověření</value></data>
+  <data name="Personal data" xml:space="preserve"><value>Osobní údaje</value></data>
+</root>
+

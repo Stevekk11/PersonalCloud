@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Galerie fotografií" xml:space="preserve">
+    <value>Galerie fotografií</value>
+  </data>
+  <data name="Zatím nemáte nahrané žádné obrázky." xml:space="preserve">
+    <value>Zatím nemáte nahrané žádné obrázky.</value>
+  </data>
+  <data name="Nahrát první obrázek" xml:space="preserve">
+    <value>Nahrát první obrázek</value>
+  </data>
+  <data name="Detail fotografie" xml:space="preserve">
+    <value>Detail fotografie</value>
+  </data>
+  <data name="Načítání..." xml:space="preserve">
+    <value>Načítání...</value>
+  </data>
+  <data name="Stáhnout" xml:space="preserve">
+    <value>Stáhnout</value>
+  </data>
+  <data name="Zavřít" xml:space="preserve">
+    <value>Zavřít</value>
+  </data>
+  <data name="Smazat" xml:space="preserve">
+    <value>Smazat</value>
+  </data>
+  <data name="Informace o souboru" xml:space="preserve">
+    <value>Informace o souboru</value>
+  </data>
+  <data name="Název:" xml:space="preserve">
+    <value>Název:</value>
+  </data>
+  <data name="Velikost:" xml:space="preserve">
+    <value>Velikost:</value>
+  </data>
+  <data name="Typ:" xml:space="preserve">
+    <value>Typ:</value>
+  </data>
+  <data name="Nahráno:" xml:space="preserve">
+    <value>Nahráno:</value>
+  </data>
+  <data name="Rozměry:" xml:space="preserve">
+    <value>Rozměry:</value>
+  </data>
+  <data name="Opravdu chcete smazat tento obrázek?" xml:space="preserve">
+    <value>Opravdu chcete smazat tento obrázek?</value>
+  </data>
+  <data name="Nepodařilo se načíst detail obrázku." xml:space="preserve">
+    <value>Nepodařilo se načíst detail obrázku.</value>
+  </data>
+  <data name="Nepodařilo se smazat obrázek." xml:space="preserve">
+    <value>Nepodařilo se smazat obrázek.</value>
+  </data>
+</root>
+
