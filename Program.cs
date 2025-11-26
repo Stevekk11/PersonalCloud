@@ -27,11 +27,21 @@ builder.Services.AddScoped<DocumentService>(provider =>
     var storageRoot = configuration.GetValue<string>("Storage:Root") ?? "UserDocs";
     return new DocumentService(context, storageRoot);
 });
+
+// Configure max upload / request limits (5 GB)
+const long fiveGb = 5L * 1024 * 1024 * 1024;
+
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 104857600; // 100 MB
+    options.MultipartBodyLengthLimit = fiveGb;        // 5 GB
     options.ValueLengthLimit = int.MaxValue;
     options.MultipartHeadersLengthLimit = int.MaxValue;
+});
+
+// Kestrel server limits for large uploads
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = fiveGb;       // 5 GB
 });
 
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
