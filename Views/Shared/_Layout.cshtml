@@ -39,6 +39,13 @@
                             @Localizer["Ochrana soukromí"]
                         </a>
                     </li>
+                    <li class="nav-item d-flex align-items-center btn btn-outline-warning m-2">
+                        <a class="nav-link text-dark d-flex align-items-center" asp-area="" asp-controller="Home"
+                           asp-action="PidBoard" asp-route-culture="@culture">
+                            <i class="bi bi-bus-front me-2"></i>
+                            @Localizer["Odjezdové tabule PID"]
+                        </a>
+                    </li>
                     <li class="nav-item d-flex align-items-center  btn btn-outline-success m-2">
                         <a class="nav-link text-dark d-flex align-items-center" asp-controller="Document"
                            asp-action="Index" asp-route-culture="@culture">

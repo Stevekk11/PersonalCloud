@@ -13,9 +13,10 @@ public class DocumentService
     private readonly string _storageRoot;
 
     /// <summary>
-    /// Maximum storage allowed per user in bytes (10 GB).
+    /// Maximum storage allowed per user in bytes (10 GB / 50GB).
     /// </summary>
     public const long MaxStoragePerUser = 10L * 1024 * 1024 * 1024;
+    public const long MaxStoragePerPremiumUser = 50L * 1024 * 1024 * 1024;
 
     public DocumentService(ApplicationDbContext context, string storageRoot)
     {
@@ -64,6 +65,10 @@ public class DocumentService
         }
 
         var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+        if (!Directory.Exists(_storageRoot))
+        {
+            Directory.CreateDirectory(_storageRoot);
+        }
         var storagePath = Path.Combine(_storageRoot, fileName);
 
         using (var stream = new FileStream(storagePath, FileMode.Create))

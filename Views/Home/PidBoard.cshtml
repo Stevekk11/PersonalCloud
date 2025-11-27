@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@{
+    ViewData["Title"] = Localizer["Odjezdové tabule PID"];
+}
+@inject IViewLocalizer Localizer
+<h2>@ViewData["Title"]</h2>
+
+<div style="width:100%; height:65vh;">
+    <iframe
+        id="pidFrame"
+        src="https://pid.cz/odjezdove-tabule/"
+        style="border:0; width:100%; height:100%;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
+<hr class="border border-primary border-3 opacity-75">
+<div class="d-flex flex-row mt-5">
+    <label for="pidUrlInput">
+        @Localizer["Zadejte URL odjezdů (https://data.pid.cz/departures/...)"]
+    </label>
+    <input type="text"
+           id="pidUrlInput"
+           placeholder="https://data.pid.cz/departures/?ids=..."
+           class="form-control m-2 w-75"/>
+    <button type="button" class="btn btn-outline-primary" onclick="changePidFrame()">
+        @Localizer["Načíst"]
+    </button>
+</div>
+@section Scripts {
+<script>
+    function changePidFrame() {
+        var input = document.getElementById('pidUrlInput');
+        var frame = document.getElementById('pidFrame');
+        var url = input.value.trim();
+
+        if (!url) {
+            alert('Zadejte URL.');
+            return;
+        }
+
+        if (url.indexOf('https://data.pid.cz/departures/') !== 0) {
+            alert('@Localizer["Zadejte platnou URL https://data.pid.cz/departures/ ..."]');
+
+            return;
+        }
+
+        frame.src = url;
+    }
+</script>
+}

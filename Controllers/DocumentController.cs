@@ -23,11 +23,11 @@ public class DocumentController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly DocumentService _documentService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger _logger;
 
     public DocumentController(ApplicationDbContext context,
-        DocumentService documentService, ILogger<DocumentController> logger, UserManager<IdentityUser> userManager)
+        DocumentService documentService, ILogger<DocumentController> logger, UserManager<ApplicationUser> userManager)
     {
         _context = context;
         _documentService = documentService;

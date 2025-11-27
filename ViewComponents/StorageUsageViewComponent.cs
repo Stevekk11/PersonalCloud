@@ -33,7 +33,12 @@ public class StorageUsageViewComponent : ViewComponent
         }
 
         var usedBytes = await _documentService.GetUserStorageUsedAsync(user.Id);
-        var maxBytes = DocumentService.MaxStoragePerUser;
+
+                // Use different quota for premium vs. regular users
+                var maxBytes = user.IsPremium
+                    ? DocumentService.MaxStoragePerPremiumUser
+                    : DocumentService.MaxStoragePerUser;
+
         var percentageUsed = (double)usedBytes / maxBytes * 100;
 
         var model = new StorageUsageViewModel
