@@ -171,6 +171,9 @@ namespace PersonalCloud.Data.Migrations
                     b.Property<bool>("IsPremium")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("LastLoginTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 

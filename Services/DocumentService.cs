@@ -140,4 +140,12 @@ public class DocumentService
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<Document?> GetLatestUserDocumentAsync(string loginId)
+    {
+        return await _context.Documents
+            .Where(d => d.LoginId == loginId)
+            .OrderByDescending(d => d.UploadedAt)
+            .FirstOrDefaultAsync();
+    }
 }

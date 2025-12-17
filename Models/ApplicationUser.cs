@@ -11,4 +11,9 @@ public class ApplicationUser : IdentityUser
     /// Gets or sets a value indicating whether the user has a premium account.
     /// </summary>
     public bool IsPremium { get; set; }
+
+    /// <summary>
+    /// Gets or sets the time of the user's last successful login.
+    /// </summary>
+    public DateTime? LastLoginTime { get; set; }
 }

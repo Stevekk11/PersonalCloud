@@ -8,6 +8,7 @@ using PersonalCloud.Data;
 using PersonalCloud.Helpers;
 using PersonalCloud.Models;
 using PersonalCloud.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,9 @@ builder.Services.AddScoped<DocumentService>(provider =>
     return new DocumentService(context, storageRoot);
 });
 builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
-
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 // Configure max upload / request limits (5 GB)
 const long fiveGb = 5L * 1024 * 1024 * 1024;
 
