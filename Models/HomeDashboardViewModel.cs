@@ -17,4 +17,8 @@ public class HomeDashboardViewModel
     public string AccountTypeLabel => IsPremium ? "Premium" : "Free";
 
     public DateTime ServerTimeUtc { get; set; }
+
+    public double? Temperature { get; set; }
+
+    public double? Humidity { get; set; }
 }

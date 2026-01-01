@@ -30,6 +30,7 @@ builder.Services.AddScoped<DocumentService>(provider =>
     return new DocumentService(context, storageRoot);
 });
 builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
+builder.Services.AddHttpClient<SensorService>();
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
