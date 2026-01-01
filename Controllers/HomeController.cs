@@ -13,13 +13,15 @@ public class HomeController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly DocumentService _documentService;
+    private readonly SensorService _sensorService;
 
-    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, DocumentService documentService)
+    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, DocumentService documentService, SensorService sensorService)
     {
         _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
         _documentService = documentService;
+        _sensorService = sensorService;
     }
 
     public async Task<IActionResult> Index(string? comPort = null, bool retry = false)
@@ -28,6 +30,11 @@ public class HomeController : Controller
         {
             ServerTimeUtc = DateTime.UtcNow,
         };
+
+        // Fetch sensor data
+        var (temperature, humidity) = await _sensorService.GetLatestReadingAsync();
+        model.Temperature = temperature;
+        model.Humidity = humidity;
 
         if (User.Identity?.IsAuthenticated == true)
         {
