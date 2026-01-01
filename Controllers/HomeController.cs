@@ -67,6 +67,12 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetSensorData()
+    {
+        var (temperature, humidity) = await _sensorService.GetLatestReadingAsync();
+        return Json(new { temperature, humidity });
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

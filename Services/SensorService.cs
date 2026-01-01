@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.IO;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
 namespace PersonalCloud.Services;
@@ -8,16 +10,14 @@ namespace PersonalCloud.Services;
 /// </summary>
 public class SensorService
 {
-    private readonly HttpClient _httpClient;
     private readonly ILogger<SensorService> _logger;
     private readonly string _sensorServerUrl;
     
     private static readonly Regex TempRegex = new(@"Temp=([\d.]+)", RegexOptions.Compiled);
     private static readonly Regex HumRegex = new(@"Humidity=([\d.]+)", RegexOptions.Compiled);
 
-    public SensorService(HttpClient httpClient, ILogger<SensorService> logger, IConfiguration configuration)
+    public SensorService(ILogger<SensorService> logger, IConfiguration configuration)
     {
-        _httpClient = httpClient;
         _logger = logger;
         _sensorServerUrl = configuration.GetValue<string>("SensorServer:Url") ?? "http://192.168.1.90:5000";
     }
@@ -30,26 +30,40 @@ public class SensorService
     {
         try
         {
-            var response = await _httpClient.GetStringAsync(_sensorServerUrl);
-            
-            // Parse format: "Reading #{counter}: Temp={temp:.1f} , Humidity={hum:.1f}%\r\n"
-            var tempMatch = TempRegex.Match(response);
-            var humMatch = HumRegex.Match(response);
-
-            double? temperature = null;
-            double? humidity = null;
-
-            if (tempMatch.Success && double.TryParse(tempMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var temp))
+            var uri = new Uri(_sensorServerUrl);
+            using (var client = new TcpClient())
             {
-                temperature = temp;
-            }
+                await client.ConnectAsync(uri.Host, uri.Port);
+                using (var stream = client.GetStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    var response = await reader.ReadLineAsync();
+                    
+                    if (response == null)
+                    {
+                        return (null, null);
+                    }
+                    
+                    // Parse format: "Reading #{counter}: Temp={temp:.1f} , Humidity={hum:.1f}%"
+                    var tempMatch = TempRegex.Match(response);
+                    var humMatch = HumRegex.Match(response);
 
-            if (humMatch.Success && double.TryParse(humMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var hum))
-            {
-                humidity = hum;
-            }
+                    double? temperature = null;
+                    double? humidity = null;
 
-            return (temperature, humidity);
+                    if (tempMatch.Success && double.TryParse(tempMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var temp))
+                    {
+                        temperature = temp;
+                    }
+
+                    if (humMatch.Success && double.TryParse(humMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var hum))
+                    {
+                        humidity = hum;
+                    }
+
+                    return (temperature, humidity);
+                }
+            }
         }
         catch (Exception ex)
         {
