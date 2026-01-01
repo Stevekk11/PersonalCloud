@@ -30,7 +30,11 @@ builder.Services.AddScoped<DocumentService>(provider =>
     return new DocumentService(context, storageRoot);
 });
 builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
-builder.Services.AddHttpClient<SensorService>();
+builder.Services.AddHttpClient<SensorService>()
+    .ConfigureHttpClient(client =>
+    {
+        client.Timeout = TimeSpan.FromSeconds(5);
+    });
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();

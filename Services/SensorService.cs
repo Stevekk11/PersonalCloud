@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace PersonalCloud.Services;
@@ -10,6 +11,9 @@ public class SensorService
     private readonly HttpClient _httpClient;
     private readonly ILogger<SensorService> _logger;
     private readonly string _sensorServerUrl;
+    
+    private static readonly Regex TempRegex = new(@"Temp=([\d.]+)", RegexOptions.Compiled);
+    private static readonly Regex HumRegex = new(@"Humidity=([\d.]+)", RegexOptions.Compiled);
 
     public SensorService(HttpClient httpClient, ILogger<SensorService> logger, IConfiguration configuration)
     {
@@ -26,22 +30,21 @@ public class SensorService
     {
         try
         {
-            _httpClient.Timeout = TimeSpan.FromSeconds(5);
             var response = await _httpClient.GetStringAsync(_sensorServerUrl);
             
             // Parse format: "Reading #{counter}: Temp={temp:.1f} , Humidity={hum:.1f}%\r\n"
-            var tempMatch = Regex.Match(response, @"Temp=([\d.]+)");
-            var humMatch = Regex.Match(response, @"Humidity=([\d.]+)");
+            var tempMatch = TempRegex.Match(response);
+            var humMatch = HumRegex.Match(response);
 
             double? temperature = null;
             double? humidity = null;
 
-            if (tempMatch.Success && double.TryParse(tempMatch.Groups[1].Value, out var temp))
+            if (tempMatch.Success && double.TryParse(tempMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var temp))
             {
                 temperature = temp;
             }
 
-            if (humMatch.Success && double.TryParse(humMatch.Groups[1].Value, out var hum))
+            if (humMatch.Success && double.TryParse(humMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var hum))
             {
                 humidity = hum;
             }
