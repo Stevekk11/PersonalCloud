@@ -1,5 +1,5 @@
 ﻿# PersonalCloud
-# This is a demo
+# Version 0.6.2-Alpha
 ASP.NET Core 9.0 web application for personal document storage and management with user authentication.
 
 ## Features
@@ -8,6 +8,7 @@ ASP.NET Core 9.0 web application for personal document storage and management wi
 - Multi-language support (English, Czech)
 - Email notifications via SMTP
 - SQLite database
+- Temperature & humidity sensor
 
 ## Tech Stack
 - .NET 9.0
@@ -15,3 +16,4 @@ ASP.NET Core 9.0 web application for personal document storage and management wi
 - SQLite
 - MailKit
 - Syncfusion DocIO
+- MicroPython
