@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Odjezdové tabule PID" xml:space="preserve">
+    <value>Odjezdové tabule PID</value>
+  </data>
+  <data name="Zadejte URL odjezdů (https://data.pid.cz/departures/...)" xml:space="preserve">
+    <value>Zadejte URL odjezdů (https://data.pid.cz/departures/...)</value>
+  </data>
+  <data name="Načíst" xml:space="preserve">
+    <value>Načíst</value>
+  </data>
+  <data name="Zadejte platnou URL https://data.pid.cz/departures/ ..." xml:space="preserve">
+    <value>Zadejte platnou URL https://data.pid.cz/departures/ ...</value>
+  </data>
+</root>

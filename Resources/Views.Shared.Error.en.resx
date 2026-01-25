@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="RequestIdLabel" xml:space="preserve">
+    <value>Request ID:</value>
+  </data>
+  <data name="DevelopmentModeTitle" xml:space="preserve">
+    <value>Development Mode</value>
+  </data>
+  <data name="DevelopmentModeIntro" xml:space="preserve">
+    <value>Switching to the Development environment displays more detailed information about the error that occurred.</value>
+  </data>
+  <data name="DevelopmentModeWarning" xml:space="preserve">
+    <value>The Development environment should not be enabled for deployed applications. It can result in displaying sensitive information from exceptions to end users. For local debugging, enable the Development environment by setting the ASPNETCORE_ENVIRONMENT environment variable to Development and restarting the application.</value>
+  </data>
+</root>
