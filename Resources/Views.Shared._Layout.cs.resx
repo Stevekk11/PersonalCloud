@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
@@ -19,27 +19,27 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Domů" xml:space="preserve">
-        <value>Home</value>
+        <value>Domů</value>
     </data>
     <data name="Ochrana soukromí" xml:space="preserve">
-        <value>Privacy policy</value>
+        <value>Ochrana soukromí</value>
     </data>
     <data name="Moje soubory" xml:space="preserve">
-        <value>My documents</value>
+        <value>Moje soubory</value>
     </data>
     <data name="Moje obrázky" xml:space="preserve">
-        <value>Gallery</value>
+        <value>Moje obrázky</value>
     </data>
     <data name="Přehrávač skladeb" xml:space="preserve">
-        <value>Music Player</value>
+        <value>Přehrávač skladeb</value>
     </data>
     <data name="&amp;copy; 2025 SPŠE Ječná - Cloudové úložiště" xml:space="preserve">
-        <value>&amp;copy; 2025 Secondary School of Technical Engineering Jecna</value>
+        <value>&amp;copy; 2025 SPŠE Ječná - Cloudové úložiště</value>
     </data>
     <data name="Cloudové úložiště" xml:space="preserve">
-        <value>PersonalCloud</value>
+        <value>Cloudové úložiště</value>
     </data>
     <data name="Odjezdové tabule PID" xml:space="preserve">
-        <value>PID Departure Boards</value>
+        <value>Odjezdové tabule PID</value>
     </data>
 </root>
