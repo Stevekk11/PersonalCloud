@@ -14,13 +14,16 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<ChangeUsernameModel> _logger;
 
         public ChangeUsernameModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            ILogger<ChangeUsernameModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         [TempData]
@@ -96,6 +99,7 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
             var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.NewUsername);
             if (!setUserNameResult.Succeeded)
             {
+                _logger.LogWarning("Failed to change username for user {UserId} to {NewUsername}", user.Id, Input.NewUsername);
                 foreach (var error in setUserNameResult.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -108,7 +112,8 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your username has been updated.";
+            _logger.LogInformation("User {UserId} changed username from {OldUsername} to {NewUsername}", user.Id, user.UserName, Input.NewUsername);
+            StatusMessage = "Your username has been changed.";
             return RedirectToPage();
         }
     }

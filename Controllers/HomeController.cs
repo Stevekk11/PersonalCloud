@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PersonalCloud.Models;
 using Microsoft.AspNetCore.Identity;
 using PersonalCloud.Services;
-using System.IO.Ports;
 
 namespace PersonalCloud.Controllers;
 
@@ -11,21 +10,20 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly DocumentService _documentService;
     private readonly SensorService _sensorService;
 
-    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, DocumentService documentService, SensorService sensorService)
+    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, DocumentService documentService, SensorService sensorService)
     {
         _logger = logger;
         _userManager = userManager;
-        _signInManager = signInManager;
         _documentService = documentService;
         _sensorService = sensorService;
     }
 
-    public async Task<IActionResult> Index(string? comPort = null, bool retry = false)
+    public async Task<IActionResult> Index()
     {
+        _logger.LogInformation("Loading Home Dashboard for user: {User}", User.Identity?.Name ?? "Anonymous");
         var model = new HomeDashboardViewModel
         {
             ServerTimeUtc = DateTime.UtcNow,
@@ -59,11 +57,13 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
+        _logger.LogInformation("Visiting Privacy page.");
         return View();
     }
 
     public IActionResult PidBoard()
     {
+        _logger.LogInformation("Visiting PidBoard page.");
         return View();
     }
 
@@ -77,6 +77,8 @@ public class HomeController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        _logger.LogError("An error occurred. Request ID: {RequestId}", requestId);
+        return View(new ErrorViewModel { RequestId = requestId });
     }
 }

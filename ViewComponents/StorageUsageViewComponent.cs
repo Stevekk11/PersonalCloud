@@ -12,11 +12,13 @@ public class StorageUsageViewComponent : ViewComponent
 {
     private readonly DocumentService _documentService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<StorageUsageViewComponent> _logger;
 
-    public StorageUsageViewComponent(DocumentService documentService, UserManager<ApplicationUser> userManager)
+    public StorageUsageViewComponent(DocumentService documentService, UserManager<ApplicationUser> userManager, ILogger<StorageUsageViewComponent> logger)
     {
         _documentService = documentService;
         _userManager = userManager;
+        _logger = logger;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
@@ -29,6 +31,7 @@ public class StorageUsageViewComponent : ViewComponent
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user == null)
         {
+            _logger.LogWarning("StorageUsageViewComponent: User is authenticated but not found in database.");
             return Content(string.Empty);
         }
 

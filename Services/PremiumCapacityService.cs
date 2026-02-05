@@ -10,18 +10,22 @@ namespace PersonalCloud.Services;
 public class PremiumCapacityService : IPremiumCapacityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<PremiumCapacityService> _logger;
     private const double GigabytesPerPremiumUser = 50.0;
 
-    public PremiumCapacityService(UserManager<ApplicationUser> userManager)
+    public PremiumCapacityService(UserManager<ApplicationUser> userManager, ILogger<PremiumCapacityService> logger)
     {
         _userManager = userManager;
+        _logger = logger;
     }
 
     /// <inheritdoc/>
     public int GetMaxPremiumUsers()
     {
         double freeGB = GetAvailableDiskSpaceGB();
-        return (int)Math.Floor(freeGB / GigabytesPerPremiumUser);
+        var maxUsers = (int)Math.Floor(freeGB / GigabytesPerPremiumUser);
+        _logger.LogDebug("Calculated max premium users: {MaxUsers} based on {FreeGB} GB free space", maxUsers, freeGB);
+        return maxUsers;
     }
 
     /// <inheritdoc/>
@@ -35,7 +39,12 @@ public class PremiumCapacityService : IPremiumCapacityService
     {
         int currentPremiumCount = await GetCurrentPremiumUserCountAsync();
         int maxPremium = GetMaxPremiumUsers();
-        return currentPremiumCount < maxPremium;
+        bool canAdd = currentPremiumCount < maxPremium;
+        if (!canAdd)
+        {
+            _logger.LogWarning("Cannot add premium user: current count {Current} reaches or exceeds max {Max}", currentPremiumCount, maxPremium);
+        }
+        return canAdd;
     }
 
     /// <inheritdoc/>

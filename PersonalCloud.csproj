@@ -13,18 +13,22 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.14.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="SerialPortStream" Version="2.4.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="31.2.4" />
     <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="31.2.4" />
+    <PackageReference Include="Syncfusion.Presentation.Net.Core" Version="31.2.4" />
+    <PackageReference Include="Syncfusion.PresentationRenderer.Net.Core" Version="31.2.4" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="31.2.4" />
+    <PackageReference Include="Syncfusion.XlsIORenderer.Net.Core" Version="31.2.4" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
     <PackageReference Include="System.IO.Ports" Version="9.0.11" />
   </ItemGroup>

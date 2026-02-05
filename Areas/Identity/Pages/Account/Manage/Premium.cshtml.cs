@@ -14,13 +14,16 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPremiumCapacityService _premiumCapacityService;
+        private readonly ILogger<PremiumModel> _logger;
 
         public PremiumModel(
             UserManager<ApplicationUser> userManager,
-            IPremiumCapacityService premiumCapacityService)
+            IPremiumCapacityService premiumCapacityService,
+            ILogger<PremiumModel> logger)
         {
             _userManager = userManager;
             _premiumCapacityService = premiumCapacityService;
+            _logger = logger;
         }
 
         [TempData]
@@ -72,6 +75,7 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
             // Re-check capacity to prevent race conditions
             if (!await _premiumCapacityService.CanAddPremiumUserAsync())
             {
+                _logger.LogWarning("Premium upgrade failed for user {UserId}: No slots available.", user.Id);
                 StatusMessage = "Error: No premium slots available. Insufficient disk space.";
                 return RedirectToPage();
             }
@@ -81,10 +85,12 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
 
             if (!result.Succeeded)
             {
+                _logger.LogError("Failed to update user {UserId} to premium. Errors: {Errors}", user.Id, string.Join(", ", result.Errors.Select(e => e.Description)));
                 StatusMessage = "Error: Failed to upgrade to premium. Please try again.";
                 return RedirectToPage();
             }
 
+            _logger.LogInformation("User {UserId} upgraded to premium.", user.Id);
             StatusMessage = "Congratulations! You have been upgraded to Premium!";
             return RedirectToPage();
         }
@@ -108,10 +114,12 @@ namespace PersonalCloud.Areas.Identity.Pages.Account.Manage
 
             if (!result.Succeeded)
             {
+                _logger.LogError("Failed to update user {UserId} (downgrade). Errors: {Errors}", user.Id, string.Join(", ", result.Errors.Select(e => e.Description)));
                 StatusMessage = "Error: Failed to downgrade from premium. Please try again.";
                 return RedirectToPage();
             }
 
+            _logger.LogInformation("User {UserId} downgraded from premium.", user.Id);
             StatusMessage = "You have been downgraded from Premium.";
             return RedirectToPage();
         }

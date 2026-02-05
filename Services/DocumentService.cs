@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PersonalCloud.Models;
 using PersonalCloud.Data;
+using PersonalCloud.Models;
 
 namespace PersonalCloud.Services;
 
@@ -11,6 +11,7 @@ public class DocumentService
 {
     private readonly ApplicationDbContext _context;
     private readonly string _storageRoot;
+    private readonly ILogger<DocumentService> _logger;
 
     /// <summary>
     /// Maximum storage allowed per user in bytes (10 GB / 50GB).
@@ -18,10 +19,11 @@ public class DocumentService
     public const long MaxStoragePerUser = 10L * 1024 * 1024 * 1024;
     public const long MaxStoragePerPremiumUser = 50L * 1024 * 1024 * 1024;
 
-    public DocumentService(ApplicationDbContext context, string storageRoot)
+    public DocumentService(ApplicationDbContext context, string storageRoot, ILogger<DocumentService> logger)
     {
         _context = context;
         _storageRoot = storageRoot;
+        _logger = logger;
         Directory.CreateDirectory(_storageRoot);
     }
 
@@ -54,6 +56,7 @@ public class DocumentService
 
         if (disallowedExtensions.Contains(fileExtension))
         {
+            _logger.LogWarning("File upload blocked: disallowed extension {Extension} for user {UserId}", fileExtension, loginId);
             throw new ArgumentException($"File type '{fileExtension}' is not allowed for security reasons.");
         }
 
@@ -61,6 +64,7 @@ public class DocumentService
         var currentUsage = await GetUserStorageUsedAsync(loginId);
         if (currentUsage + file.Length > MaxStoragePerUser)
         {
+            _logger.LogWarning("File upload blocked: storage limit exceeded for user {UserId}", loginId);
             throw new InvalidOperationException("Storage limit exceeded. You have reached the maximum storage capacity of 10 GB.");
         }
 
@@ -88,6 +92,7 @@ public class DocumentService
 
         _context.Documents.Add(document);
         await _context.SaveChangesAsync();
+        _logger.LogInformation("Document {DocumentId} added for user {UserId}", document.Id, loginId);
         return document;
     }
 
@@ -118,7 +123,11 @@ public class DocumentService
     public async Task<bool> DeleteDocumentAsync(int documentId, string loginId)
     {
         var document = await GetDocumentAsync(documentId, loginId);
-        if (document == null) return false;
+        if (document == null)
+        {
+            _logger.LogWarning("Attempted to delete non-existent document {DocumentId} for user {UserId}", documentId, loginId);
+            return false;
+        }
 
         // Only allow deletion within _storageRoot
         var fullStorageRoot = Path.GetFullPath(_storageRoot);
@@ -127,7 +136,7 @@ public class DocumentService
         // Ensure document.StoragePath is under the storage root
         if (!sanitizedPath.StartsWith(fullStorageRoot, StringComparison.OrdinalIgnoreCase))
         {
-            // Optionally log this incident for investigation
+            _logger.LogError("Attempted path traversal detected for user {UserId} on document {DocumentId}", loginId, documentId);
             throw new UnauthorizedAccessException("Attempted path traversal detected.");
         }
 
@@ -138,6 +147,7 @@ public class DocumentService
 
         _context.Documents.Remove(document);
         await _context.SaveChangesAsync();
+        _logger.LogInformation("Document {DocumentId} deleted for user {UserId}", documentId, loginId);
         return true;
     }
 

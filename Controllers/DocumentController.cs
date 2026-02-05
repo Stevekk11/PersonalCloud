@@ -10,6 +10,10 @@ using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.Pdf;
 using System.Drawing;
+using Syncfusion.XlsIO;
+using Syncfusion.XlsIORenderer;
+using Syncfusion.Presentation;
+using Syncfusion.PresentationRenderer;
 
 namespace PersonalCloud.Controllers;
 
@@ -24,7 +28,7 @@ public class DocumentController : Controller
     private readonly ApplicationDbContext _context;
     private readonly DocumentService _documentService;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ILogger _logger;
+    private readonly ILogger<DocumentController> _logger;
 
     public DocumentController(ApplicationDbContext context,
         DocumentService documentService, ILogger<DocumentController> logger, UserManager<ApplicationUser> userManager)
@@ -55,6 +59,7 @@ public class DocumentController : Controller
     public async Task<IActionResult> Index()
     {
         var userId = GetCurrentUserId();
+        _logger.LogInformation("User {UserId} is viewing their documents.", userId);
         var docs = await _documentService.GetUserDocumentsAsync(userId);
         var documentsWithSignature = docs.Select(doc => new DocumentWithSignature
         {
@@ -64,7 +69,6 @@ public class DocumentController : Controller
 
         return View(new DocumentViewModel { DocumentsWithSignature = documentsWithSignature });
     }
-
 
 
     /// <summary>
@@ -91,20 +95,22 @@ public class DocumentController : Controller
         }
         catch (ArgumentException ex)
         {
-
             TempData["UploadError"] = ex.Message;
-            _logger.LogWarning(ex, "Upload blocked for user {User} with file {FileName}", User.Identity.Name, file.FileName);
+            _logger.LogWarning(ex, "Upload blocked for user {User} with file {FileName}", User.Identity.Name,
+                file.FileName);
             return RedirectToAction(nameof(Index));
         }
         catch (InvalidOperationException ex)
         {
             TempData["UploadError"] = ex.Message;
-            _logger.LogWarning(ex, "Storage limit exceeded for user {User} with file {FileName}", User.Identity.Name, file.FileName);
+            _logger.LogWarning(ex, "Storage limit exceeded for user {User} with file {FileName}", User.Identity.Name,
+                file.FileName);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error while uploading file {FileName} for user {User}", file.FileName, User.Identity.Name);
+            _logger.LogError(ex, "Unexpected error while uploading file {FileName} for user {User}", file.FileName,
+                User.Identity.Name);
             TempData["UploadError"] = "An unexpected error occurred while uploading the file.";
             return RedirectToAction(nameof(Index));
         }
@@ -167,6 +173,7 @@ public class DocumentController : Controller
     public async Task<IActionResult> Gallery()
     {
         var userId = GetCurrentUserId();
+        _logger.LogInformation("User {UserId} is viewing image gallery.", userId);
         var imageTypes = new[] { "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp", "image/bmp" };
 
         var images = await _context.Documents
@@ -180,6 +187,7 @@ public class DocumentController : Controller
     public async Task<IActionResult> Music()
     {
         var userId = GetCurrentUserId();
+        _logger.LogInformation("User {UserId} is viewing music library.", userId);
         var audioTypes = new[]
             { "audio/mpeg", "audio/mp3", "audio/wav", "audio/x-wav", "audio/x-ms-wma", "audio/x-ms-wax", "audio/ogg" };
 
@@ -202,10 +210,14 @@ public class DocumentController : Controller
     public async Task<IActionResult> GetImageDetails(int id)
     {
         var userId = GetCurrentUserId();
+        _logger.LogDebug("Fetching image details for document {DocumentId} and user {UserId}", id, userId);
         var doc = await _documentService.GetDocumentAsync(id, userId);
 
         if (doc == null || !doc.ContentType.StartsWith("image/"))
+        {
+            _logger.LogWarning("Image details requested for non-existent or non-image document {DocumentId} by user {UserId}", id, userId);
             return NotFound();
+        }
 
         var absolutePath = Path.GetFullPath(doc.StoragePath);
         using var image = Image.FromFile(absolutePath);
@@ -233,6 +245,7 @@ public class DocumentController : Controller
     public async Task<IActionResult> Preview(int id)
     {
         var userId = GetCurrentUserId();
+        _logger.LogInformation("User {UserId} requested preview for document {DocumentId}", userId, id);
         var doc = await _documentService.GetDocumentAsync(id, userId);
         if (doc == null)
             return NotFound();
@@ -250,7 +263,7 @@ public class DocumentController : Controller
             using (Stream fileStream = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
             {
                 // Load the Word document
-                using (WordDocument wordDocument = new WordDocument(fileStream, FormatType.Docx))
+                using (WordDocument wordDocument = new WordDocument(fileStream, Syncfusion.DocIO.FormatType.Docx))
                 {
                     // Create a new DocIORenderer instance
                     using (DocIORenderer renderer = new DocIORenderer())
@@ -265,6 +278,46 @@ public class DocumentController : Controller
                             // Return PDF for preview
                             return File(outputStream.ToArray(), "application/pdf");
                         }
+                    }
+                }
+            }
+        }
+        // Handle Excel documents
+        else if (mimeType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+                 mimeType == "application/vnd.ms-excel")
+        {
+            using (ExcelEngine excelEngine = new ExcelEngine())
+            {
+                IApplication application = excelEngine.Excel;
+                using (Stream fileStream = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
+                {
+                    IWorkbook workbook = application.Workbooks.Open(fileStream);
+                    XlsIORenderer renderer = new XlsIORenderer();
+
+                    using (PdfDocument pdfDocument = renderer.ConvertToPDF(workbook))
+                    {
+                        MemoryStream outputStream = new MemoryStream();
+                        pdfDocument.Save(outputStream);
+                        outputStream.Position = 0;
+                        return File(outputStream.ToArray(), "application/pdf");
+                    }
+                }
+            }
+        }
+        // Handle PowerPoint documents
+        else if (mimeType == "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
+                 mimeType == "application/vnd.ms-powerpoint")
+        {
+            using (Stream fileStream = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
+            {
+                using (IPresentation presentation = Presentation.Open(fileStream))
+                {
+                    using (PdfDocument pdfDocument = PresentationToPdfConverter.Convert(presentation))
+                    {
+                        MemoryStream outputStream = new MemoryStream();
+                        pdfDocument.Save(outputStream);
+                        outputStream.Position = 0;
+                        return File(outputStream.ToArray(), "application/pdf");
                     }
                 }
             }

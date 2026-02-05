@@ -33,7 +33,8 @@ builder.Services.AddScoped<DocumentService>(provider =>
     var context = provider.GetRequiredService<ApplicationDbContext>();
     var configuration = provider.GetRequiredService<IConfiguration>();
     var storageRoot = configuration.GetValue<string>("Storage:Root") ?? "UserDocs";
-    return new DocumentService(context, storageRoot);
+    var logger = provider.GetRequiredService<ILogger<DocumentService>>();
+    return new DocumentService(context, storageRoot, logger);
 });
 builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
 builder.Services.AddSingleton<SensorService>();
