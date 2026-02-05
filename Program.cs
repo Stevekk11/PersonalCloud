@@ -12,6 +12,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register Syncfusion license
+var syncfusionLicenseKey = builder.Configuration["SYNCFUSION_LICENSE_KEY"];
+if (!string.IsNullOrEmpty(syncfusionLicenseKey))
+{
+    Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncfusionLicenseKey);
+}
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
