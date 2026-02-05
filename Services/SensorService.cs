@@ -12,6 +12,7 @@ public class SensorService
 {
     private readonly ILogger<SensorService> _logger;
     private readonly string _sensorServerUrl;
+    private bool _isSensorDisabled = false;
     
     private static readonly Regex TempRegex = new(@"Temp=([\d.]+)", RegexOptions.Compiled);
     private static readonly Regex HumRegex = new(@"Humidity=([\d.]+)", RegexOptions.Compiled);
@@ -28,12 +29,26 @@ public class SensorService
     /// <returns>A tuple containing temperature and humidity values, or null values if fetch fails.</returns>
     public async Task<(double? Temperature, double? Humidity)> GetLatestReadingAsync()
     {
+        if (_isSensorDisabled)
+        {
+            return (null, null);
+        }
+
         try
         {
             var uri = new Uri(_sensorServerUrl);
             using (var client = new TcpClient())
             {
-                await client.ConnectAsync(uri.Host, uri.Port);
+                // Set a reasonable timeout for the connection attempt (e.g., 2 seconds)
+                var connectTask = client.ConnectAsync(uri.Host, uri.Port);
+                var timeoutTask = Task.Delay(2000);
+
+                if (await Task.WhenAny(connectTask, timeoutTask) == timeoutTask)
+                {
+                     throw new TimeoutException("Connection to sensor timed out.");
+                }
+                await connectTask; // Ensure any exception from ConnectAsync is thrown
+
                 using (var stream = client.GetStream())
                 using (var reader = new StreamReader(stream))
                 {
@@ -67,7 +82,8 @@ public class SensorService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to fetch sensor data from {Url}", _sensorServerUrl);
+            _logger.LogWarning(ex, "Failed to fetch sensor data from {Url}. Sensor will be disabled until restart.", _sensorServerUrl);
+            _isSensorDisabled = true;
             return (null, null);
         }
     }

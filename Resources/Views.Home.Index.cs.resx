@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <data name="Home Page" xml:space="preserve">
     <value>Domovská stránka</value>
@@ -6,8 +6,49 @@
   <data name="Vítejte, {0}" xml:space="preserve">
     <value>Vítejte, {0}</value>
   </data>
-  <data name="Toto je demo verze cloudového úložiště" xml:space="preserve">
-    <value>Toto je demo verze cloudového úložiště</value>
+  <data name="Dobrý den" xml:space="preserve">
+    <value>Dobrý den</value>
+  </data>
+  <data name="Poslední nahraný soubor" xml:space="preserve">
+    <value>Poslední nahraný soubor</value>
+  </data>
+  <data name="Nahráno:" xml:space="preserve">
+    <value>Nahráno:</value>
+  </data>
+  <data name="Zatím jste nenahráli žádný soubor." xml:space="preserve">
+    <value>Zatím jste nenahráli žádný soubor.</value>
+  </data>
+  <data name="Poslední přihlášení" xml:space="preserve">
+    <value>Poslední přihlášení</value>
+  </data>
+  <data name="Informace o posledním přihlášení není k dispozici." xml:space="preserve">
+    <value>Informace o posledním přihlášení není k dispozici.</value>
+  </data>
+  <data name="Typ účtu" xml:space="preserve">
+    <value>Typ účtu</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="Aktuální čas" xml:space="preserve">
+    <value>Aktuální čas</value>
+  </data>
+  <data name="Teplota a Vlhkost" xml:space="preserve">
+    <value>Teplota a Vlhkost</value>
+  </data>
+  <data name="Teplota:" xml:space="preserve">
+    <value>Teplota:</value>
+  </data>
+  <data name="Vlhkost:" xml:space="preserve">
+    <value>Vlhkost:</value>
+  </data>
+  <data name="Data nejsou k dispozici" xml:space="preserve">
+    <value>Data nejsou k dispozici</value>
+  </data>
+  <data name="Přihlaste se, abyste viděli svůj osobní dashboard." xml:space="preserve">
+    <value>Přihlaste se, abyste viděli svůj osobní dashboard.</value>
   </data>
 </root>
-

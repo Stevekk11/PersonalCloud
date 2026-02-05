@@ -1,7 +1,54 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <data name="Home Page" xml:space="preserve"><value>Home Page</value></data>
-  <data name="Vítejte, {0}" xml:space="preserve"><value>Welcome, {0}</value></data>
-  <data name="Toto je demo verze cloudového úložiště" xml:space="preserve"><value>This is a demo version of the cloud storage</value></data>
+  <data name="Home Page" xml:space="preserve">
+    <value>Home Page</value>
+  </data>
+  <data name="Vítejte, {0}" xml:space="preserve">
+    <value>Welcome, {0}</value>
+  </data>
+  <data name="Dobrý den" xml:space="preserve">
+    <value>Hello</value>
+  </data>
+  <data name="Poslední nahraný soubor" xml:space="preserve">
+    <value>Last uploaded file</value>
+  </data>
+  <data name="Nahráno:" xml:space="preserve">
+    <value>Uploaded:</value>
+  </data>
+  <data name="Zatím jste nenahráli žádný soubor." xml:space="preserve">
+    <value>You haven't uploaded any files yet.</value>
+  </data>
+  <data name="Poslední přihlášení" xml:space="preserve">
+    <value>Last login</value>
+  </data>
+  <data name="Informace o posledním přihlášení není k dispozici." xml:space="preserve">
+    <value>Last login information is not available.</value>
+  </data>
+  <data name="Typ účtu" xml:space="preserve">
+    <value>Account type</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="Aktuální čas" xml:space="preserve">
+    <value>Current time</value>
+  </data>
+  <data name="Teplota a Vlhkost" xml:space="preserve">
+    <value>Temperature and Humidity</value>
+  </data>
+  <data name="Teplota:" xml:space="preserve">
+    <value>Temperature:</value>
+  </data>
+  <data name="Vlhkost:" xml:space="preserve">
+    <value>Humidity:</value>
+  </data>
+  <data name="Data nejsou k dispozici" xml:space="preserve">
+    <value>Data not available</value>
+  </data>
+  <data name="Přihlaste se, abyste viděli svůj osobní dashboard." xml:space="preserve">
+    <value>Please login to see your personal dashboard.</value>
+  </data>
 </root>
-
