@@ -205,32 +205,6 @@ Change the language by appending `?culture=en` (English) or `?culture=cs` (Czech
 
 Premium users receive 50 GB of storage instead of the standard 10 GB. Contact your administrator for premium access.
 
-## 💻 Development
-
-### Project Structure
-
-```
-PersonalCloud/
-├── Areas/              # Identity-related Razor Pages
-├── Controllers/        # MVC Controllers
-│   ├── DocumentController.cs
-│   └── HomeController.cs
-├── Data/              # Database context
-├── Helpers/           # Utility classes
-├── Models/            # Domain models
-├── Properties/        # Launch settings
-├── Resources/         # Localization resources
-├── Services/          # Business logic
-│   ├── DocumentService.cs
-│   ├── SensorService.cs
-│   └── PremiumCapacityService.cs
-├── ViewComponents/    # Reusable view components
-├── Views/             # Razor views
-├── wwwroot/           # Static files (CSS, JS, images)
-├── UserDocs/          # Document storage directory
-├── Program.cs         # Application entry point
-└── appsettings.json   # Configuration
-```
 
 ### Running in Development Mode
 
@@ -282,28 +256,6 @@ Set `ASPNETCORE_ENVIRONMENT=Production` on your production server.
 ```bash
 cd publish
 ./PersonalCloud
-```
-
-### Deployment Considerations
-
-- **HTTPS**: The application redirects to HTTPS. Ensure you have valid SSL certificates.
-- **Database Backups**: Regularly backup your `app.db` file and `UserDocs/` directory.
-- **File Permissions**: Ensure the application has read/write permissions for:
-  - `app.db` (database)
-  - `UserDocs/` (file storage)
-  - `Logs/` (logging)
-- **Reverse Proxy**: Consider using Nginx or IIS as a reverse proxy for production deployments.
-- **Firewall**: Open appropriate ports (typically 80/443).
-
-### Docker Deployment (Optional)
-
-A Dockerfile can be added for containerized deployment. Example:
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
-WORKDIR /app
-COPY ./publish .
-ENTRYPOINT ["./PersonalCloud"]
 ```
 
 ## 🔧 Troubleshooting
