@@ -67,6 +67,12 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult UserManual()
+    {
+        _logger.LogInformation("Visiting UserManual page.");
+        return View();
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetSensorData()
     {

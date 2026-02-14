@@ -42,4 +42,7 @@
     <data name="Odjezdové tabule PID" xml:space="preserve">
         <value>PID Departure Boards</value>
     </data>
+    <data name="Uživatelský manuál" xml:space="preserve">
+        <value>User Manual</value>
+    </data>
 </root>

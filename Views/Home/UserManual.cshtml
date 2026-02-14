@@ -1,0 +1,174 @@
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Uživatelský manuál"];
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4"><i class="bi bi-book me-2"></i>@ViewData["Title"]</h1>
+    
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>@Localizer["Vítejte v uživatelském manuálu aplikace PersonalCloud. Tento průvodce vám pomůže naučit se efektivně používat všechny funkce aplikace."]
+    </div>
+
+    <div class="accordion" id="manualAccordion">
+        <!-- Getting Started -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <i class="bi bi-1-circle me-2"></i>@Localizer["Začínáme"]
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Registrace a přihlášení"]</h5>
+                    <p>@Localizer["Pro použití aplikace PersonalCloud se musíte nejprve zaregistrovat a přihlásit."]</p>
+                    <ol>
+                        <li>@Localizer["Klikněte na tlačítko 'Registrace' v pravém horním rohu"]</li>
+                        <li>@Localizer["Vyplňte e-mailovou adresu a zvolte si heslo"]</li>
+                        <li>@Localizer["Po registraci se přihlaste svými přihlašovacími údaji"]</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Management -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <i class="bi bi-2-circle me-2"></i>@Localizer["Správa souborů"]
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Nahrávání souborů"]</h5>
+                    <p>@Localizer["Chcete-li nahrát soubory do cloudového úložiště:"]</p>
+                    <ol>
+                        <li>@Localizer["Klikněte na 'Moje soubory' v hlavní navigační liště"]</li>
+                        <li>@Localizer["Klikněte na tlačítko 'Nahrát soubory'"]</li>
+                        <li>@Localizer["Vyberte soubory ze svého počítače"]</li>
+                        <li>@Localizer["Soubory se automaticky nahrají do vašeho úložiště"]</li>
+                    </ol>
+                    
+                    <h5 class="mt-3">@Localizer["Stahování souborů"]</h5>
+                    <p>@Localizer["Pro stažení souboru klikněte na ikonu stahování vedle názvu souboru."]</p>
+                    
+                    <h5 class="mt-3">@Localizer["Mazání souborů"]</h5>
+                    <p>@Localizer["Pro smazání souboru klikněte na ikonu koše. Pozor, tato akce je nevratná!"]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <i class="bi bi-3-circle me-2"></i>@Localizer["Galerie obrázků"]
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Prohlížení obrázků"]</h5>
+                    <p>@Localizer["Sekce 'Moje obrázky' zobrazuje všechny vaše nahrané obrázky v přehledné galerii."]</p>
+                    <ul>
+                        <li>@Localizer["Obrázky jsou zobrazeny jako náhledy"]</li>
+                        <li>@Localizer["Kliknutím na obrázek jej zobrazíte v plné velikosti"]</li>
+                        <li>@Localizer["Můžete obrázky stahovat nebo mazat stejně jako ostatní soubory"]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Player -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <i class="bi bi-4-circle me-2"></i>@Localizer["Přehrávač hudby"]
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Přehrávání hudby"]</h5>
+                    <p>@Localizer["Sekce 'Přehrávač skladeb' umožňuje přehrávat vaše nahrané audio soubory."]</p>
+                    <ul>
+                        <li>@Localizer["Nahrajte audio soubory (MP3, WAV, atd.)"]</li>
+                        <li>@Localizer["Klikněte na 'Přehrávač skladeb' v navigaci"]</li>
+                        <li>@Localizer["Vyberte skladbu ze seznamu a přehrajte ji"]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Storage Management -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    <i class="bi bi-5-circle me-2"></i>@Localizer["Správa úložiště"]
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Kapacita úložiště"]</h5>
+                    <p>@Localizer["Vaše aktuální využití úložiště je zobrazeno v pravém horním rohu navigační lišty."]</p>
+                    <ul>
+                        <li>@Localizer["Základní uživatelé mají 100 MB úložiště"]</li>
+                        <li>@Localizer["Premium uživatelé mají 1 GB úložiště"]</li>
+                        <li>@Localizer["Překročení limitu brání nahrávání dalších souborů"]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Features -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    <i class="bi bi-6-circle me-2"></i>@Localizer["Další funkce"]
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Náhled dokumentů"]</h5>
+                    <p>@Localizer["Aplikace podporuje náhled dokumentů Word, Excel a PowerPoint přímo v prohlížeči."]</p>
+                    
+                    <h5 class="mt-3">@Localizer["Změna jazyka"]</h5>
+                    <p>@Localizer["Klikněte na ikonu jazyka v navigační liště a vyberte preferovaný jazyk (Čeština nebo English)."]</p>
+                    
+                    <h5 class="mt-3">@Localizer["Odjezdové tabule PID"]</h5>
+                    <p>@Localizer["Zobrazuje aktuální odjezdy pražské MHD v reálném čase."]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                    <i class="bi bi-7-circle me-2"></i>@Localizer["Podpora a kontakt"]
+                </button>
+            </h2>
+            <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#manualAccordion">
+                <div class="accordion-body">
+                    <h5>@Localizer["Potřebujete pomoct?"]</h5>
+                    <p>@Localizer["PersonalCloud je školní projekt vytvořený na SPŠE Ječná."]</p>
+                    <p>@Localizer["Pro další dotazy nebo problémy kontaktujte administrátora aplikace."]</p>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <i class="bi bi-shield-check me-2"></i>@Localizer["Bezpečnostní upozornění: Nenahrávejte citlivé osobní údaje. Aplikace je určena pouze pro vzdělávací účely."]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 bg-light">
+        <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-lightbulb me-2"></i>@Localizer["Tipy pro efektivní používání"]</h5>
+            <ul class="mb-0">
+                <li>@Localizer["Pravidelně kontrolujte využití úložiště"]</li>
+                <li>@Localizer["Mažte nepotřebné soubory pro uvolnění místa"]</li>
+                <li>@Localizer["Používejte smysluplné názvy souborů pro snadnější orientaci"]</li>
+                <li>@Localizer["Nezapomeňte se odhlásit po použití aplikace na veřejných počítačích"]</li>
+            </ul>
+        </div>
+    </div>
+</div>
