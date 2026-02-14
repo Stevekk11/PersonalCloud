@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Uživatelský manuál" xml:space="preserve"><value>User Manual</value></data>
+  <data name="Vítejte v uživatelském manuálu aplikace PersonalCloud. Tento průvodce vám pomůže naučit se efektivně používat všechny funkce aplikace." xml:space="preserve"><value>Welcome to the PersonalCloud user manual. This guide will help you learn to effectively use all the features of the application.</value></data>
+  <data name="Začínáme" xml:space="preserve"><value>Getting Started</value></data>
+  <data name="Registrace a přihlášení" xml:space="preserve"><value>Registration and Login</value></data>
+  <data name="Pro použití aplikace PersonalCloud se musíte nejprve zaregistrovat a přihlásit." xml:space="preserve"><value>To use the PersonalCloud application, you must first register and log in.</value></data>
+  <data name="Klikněte na tlačítko 'Registrace' v pravém horním rohu" xml:space="preserve"><value>Click the 'Register' button in the top right corner</value></data>
+  <data name="Vyplňte e-mailovou adresu a zvolte si heslo" xml:space="preserve"><value>Fill in your email address and choose a password</value></data>
+  <data name="Po registraci se přihlaste svými přihlašovacími údaji" xml:space="preserve"><value>After registration, log in with your credentials</value></data>
+  <data name="Správa souborů" xml:space="preserve"><value>File Management</value></data>
+  <data name="Nahrávání souborů" xml:space="preserve"><value>Uploading Files</value></data>
+  <data name="Chcete-li nahrát soubory do cloudového úložiště:" xml:space="preserve"><value>To upload files to cloud storage:</value></data>
+  <data name="Klikněte na 'Moje soubory' v hlavní navigační liště" xml:space="preserve"><value>Click on 'My Documents' in the main navigation bar</value></data>
+  <data name="Klikněte na tlačítko 'Nahrát soubory'" xml:space="preserve"><value>Click the 'Upload Files' button</value></data>
+  <data name="Vyberte soubory ze svého počítače" xml:space="preserve"><value>Select files from your computer</value></data>
+  <data name="Soubory se automaticky nahrají do vašeho úložiště" xml:space="preserve"><value>Files will automatically upload to your storage</value></data>
+  <data name="Stahování souborů" xml:space="preserve"><value>Downloading Files</value></data>
+  <data name="Pro stažení souboru klikněte na ikonu stahování vedle názvu souboru." xml:space="preserve"><value>To download a file, click the download icon next to the file name.</value></data>
+  <data name="Mazání souborů" xml:space="preserve"><value>Deleting Files</value></data>
+  <data name="Pro smazání souboru klikněte na ikonu koše. Pozor, tato akce je nevratná!" xml:space="preserve"><value>To delete a file, click the trash icon. Warning, this action is irreversible!</value></data>
+  <data name="Galerie obrázků" xml:space="preserve"><value>Image Gallery</value></data>
+  <data name="Prohlížení obrázků" xml:space="preserve"><value>Viewing Images</value></data>
+  <data name="Sekce 'Moje obrázky' zobrazuje všechny vaše nahrané obrázky v přehledné galerii." xml:space="preserve"><value>The 'Gallery' section displays all your uploaded images in a clear gallery.</value></data>
+  <data name="Obrázky jsou zobrazeny jako náhledy" xml:space="preserve"><value>Images are displayed as thumbnails</value></data>
+  <data name="Kliknutím na obrázek jej zobrazíte v plné velikosti" xml:space="preserve"><value>Click on an image to view it in full size</value></data>
+  <data name="Můžete obrázky stahovat nebo mazat stejně jako ostatní soubory" xml:space="preserve"><value>You can download or delete images just like other files</value></data>
+  <data name="Přehrávač hudby" xml:space="preserve"><value>Music Player</value></data>
+  <data name="Přehrávání hudby" xml:space="preserve"><value>Playing Music</value></data>
+  <data name="Sekce 'Přehrávač skladeb' umožňuje přehrávat vaše nahrané audio soubory." xml:space="preserve"><value>The 'Music Player' section allows you to play your uploaded audio files.</value></data>
+  <data name="Nahrajte audio soubory (MP3, WAV, atd.)" xml:space="preserve"><value>Upload audio files (MP3, WAV, etc.)</value></data>
+  <data name="Klikněte na 'Přehrávač skladeb' v navigaci" xml:space="preserve"><value>Click on 'Music Player' in the navigation</value></data>
+  <data name="Vyberte skladbu ze seznamu a přehrajte ji" xml:space="preserve"><value>Select a track from the list and play it</value></data>
+  <data name="Správa úložiště" xml:space="preserve"><value>Storage Management</value></data>
+  <data name="Kapacita úložiště" xml:space="preserve"><value>Storage Capacity</value></data>
+  <data name="Vaše aktuální využití úložiště je zobrazeno v pravém horním rohu navigační lišty." xml:space="preserve"><value>Your current storage usage is displayed in the top right corner of the navigation bar.</value></data>
+  <data name="Základní uživatelé mají 100 MB úložiště" xml:space="preserve"><value>Basic users have 100 MB of storage</value></data>
+  <data name="Premium uživatelé mají 1 GB úložiště" xml:space="preserve"><value>Premium users have 1 GB of storage</value></data>
+  <data name="Překročení limitu brání nahrávání dalších souborů" xml:space="preserve"><value>Exceeding the limit prevents uploading additional files</value></data>
+  <data name="Další funkce" xml:space="preserve"><value>Additional Features</value></data>
+  <data name="Náhled dokumentů" xml:space="preserve"><value>Document Preview</value></data>
+  <data name="Aplikace podporuje náhled dokumentů Word, Excel a PowerPoint přímo v prohlížeči." xml:space="preserve"><value>The application supports previewing Word, Excel, and PowerPoint documents directly in the browser.</value></data>
+  <data name="Změna jazyka" xml:space="preserve"><value>Language Change</value></data>
+  <data name="Klikněte na ikonu jazyka v navigační liště a vyberte preferovaný jazyk (Čeština nebo English)." xml:space="preserve"><value>Click on the language icon in the navigation bar and select your preferred language (Czech or English).</value></data>
+  <data name="Odjezdové tabule PID" xml:space="preserve"><value>PID Departure Boards</value></data>
+  <data name="Zobrazuje aktuální odjezdy pražské MHD v reálném čase." xml:space="preserve"><value>Displays current Prague public transport departures in real time.</value></data>
+  <data name="Podpora a kontakt" xml:space="preserve"><value>Support and Contact</value></data>
+  <data name="Potřebujete pomoct?" xml:space="preserve"><value>Need help?</value></data>
+  <data name="PersonalCloud je školní projekt vytvořený na SPŠE Ječná." xml:space="preserve"><value>PersonalCloud is a school project created at SPŠE Ječná.</value></data>
+  <data name="Pro další dotazy nebo problémy kontaktujte administrátora aplikace." xml:space="preserve"><value>For further questions or issues, contact the application administrator.</value></data>
+  <data name="Bezpečnostní upozornění: Nenahávejte citlivé osobní údaje. Aplikace je určena pouze pro vzdělávací účely." xml:space="preserve"><value>Security notice: Do not upload sensitive personal data. The application is intended for educational purposes only.</value></data>
+  <data name="Tipy pro efektivní používání" xml:space="preserve"><value>Tips for Efficient Use</value></data>
+  <data name="Pravidelně kontrolujte využití úložiště" xml:space="preserve"><value>Regularly check storage usage</value></data>
+  <data name="Mažte nepotřebné soubory pro uvolnění místa" xml:space="preserve"><value>Delete unnecessary files to free up space</value></data>
+  <data name="Používejte smysluplné názvy souborů pro snadnější orientaci" xml:space="preserve"><value>Use meaningful file names for easier navigation</value></data>
+  <data name="Nezapomeňte se odhlásit po použití aplikace na veřejných počítačích" xml:space="preserve"><value>Don't forget to log out after using the application on public computers</value></data>
+</root>
