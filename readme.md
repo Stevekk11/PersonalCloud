@@ -1,5 +1,5 @@
 ﻿# PersonalCloud
-# Version 0.7.0
+# Version 0.9.1
 
 A modern, secure ASP.NET Core 9.0 web application for personal document storage and management with user authentication, multi-language support, and IoT sensor integration.
 
