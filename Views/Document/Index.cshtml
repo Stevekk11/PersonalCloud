@@ -115,12 +115,12 @@
                     </a>
                     <button type="button" 
                             class="btn btn-sm btn-info"
-                            onclick="showRenameModal(@item.Document.Id, '@Html.Raw(item.Document.FileName)')">
+                            onclick="showRenameModal(@item.Document.Id, '@Html.JavaScriptStringEncode(item.Document.FileName)')">
                         <i class="bi bi-pencil"></i> @Localizer["Přejmenovat"]
                     </button>
                     <button type="button" 
                             class="btn btn-sm btn-warning"
-                            onclick="showMoveModal(@item.Document.Id, '@Html.Raw(item.Document.FileName)', '@Html.Raw(item.Document.FolderPath)')">
+                            onclick="showMoveModal(@item.Document.Id, '@Html.JavaScriptStringEncode(item.Document.FileName)', '@Html.JavaScriptStringEncode(item.Document.FolderPath ?? "")')">
                         <i class="bi bi-folder-symlink"></i> @Localizer["Přesunout"]
                     </button>
                     <form asp-action="Delete" asp-route-id="@item.Document.Id" method="post" style="display:inline;" asp-route-culture="@culture">
