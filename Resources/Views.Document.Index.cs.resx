@@ -66,5 +66,50 @@
   <data name="Nepodařilo se načíst informace o podpisu." xml:space="preserve">
     <value>Nepodařilo se načíst informace o podpisu.</value>
   </data>
+  <data name="Složka" xml:space="preserve">
+    <value>Složka</value>
+  </data>
+  <data name="(Kořenová složka)" xml:space="preserve">
+    <value>(Kořenová složka)</value>
+  </data>
+  <data name="Přejmenovat" xml:space="preserve">
+    <value>Přejmenovat</value>
+  </data>
+  <data name="Přesunout" xml:space="preserve">
+    <value>Přesunout</value>
+  </data>
+  <data name="Přejmenovat soubor" xml:space="preserve">
+    <value>Přejmenovat soubor</value>
+  </data>
+  <data name="Nový název" xml:space="preserve">
+    <value>Nový název</value>
+  </data>
+  <data name="Zrušit" xml:space="preserve">
+    <value>Zrušit</value>
+  </data>
+  <data name="Přesunout soubor" xml:space="preserve">
+    <value>Přesunout soubor</value>
+  </data>
+  <data name="Vyberte složku" xml:space="preserve">
+    <value>Vyberte složku</value>
+  </data>
+  <data name="Zadejte název složky nebo nechte prázdné pro kořenovou složku" xml:space="preserve">
+    <value>Zadejte název složky nebo nechte prázdné pro kořenovou složku</value>
+  </data>
+  <data name="Můžete použít lomítka (/) pro vnořené složky, např. 'Dokumenty/Práce'" xml:space="preserve">
+    <value>Můžete použít lomítka (/) pro vnořené složky, např. 'Dokumenty/Práce'</value>
+  </data>
+  <data name="Nebo vyberte existující složku:" xml:space="preserve">
+    <value>Nebo vyberte existující složku:</value>
+  </data>
+  <data name="-- Vyberte složku --" xml:space="preserve">
+    <value>-- Vyberte složku --</value>
+  </data>
+  <data name="Filtrovat podle složky" xml:space="preserve">
+    <value>Filtrovat podle složky</value>
+  </data>
+  <data name="Všechny soubory" xml:space="preserve">
+    <value>Všechny soubory</value>
+  </data>
 </root>
 

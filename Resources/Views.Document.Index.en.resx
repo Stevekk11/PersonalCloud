@@ -23,4 +23,19 @@
     <data name="Datum podpisu" xml:space="preserve"><value>Signature date</value></data>
     <data name="Počet podpisů" xml:space="preserve"><value>Signature count</value></data>
     <data name="Nepodařilo se načíst informace o podpisu." xml:space="preserve"><value>Failed to load signature info</value></data>
+    <data name="Složka" xml:space="preserve"><value>Folder</value></data>
+    <data name="(Kořenová složka)" xml:space="preserve"><value>(Root folder)</value></data>
+    <data name="Přejmenovat" xml:space="preserve"><value>Rename</value></data>
+    <data name="Přesunout" xml:space="preserve"><value>Move</value></data>
+    <data name="Přejmenovat soubor" xml:space="preserve"><value>Rename file</value></data>
+    <data name="Nový název" xml:space="preserve"><value>New name</value></data>
+    <data name="Zrušit" xml:space="preserve"><value>Cancel</value></data>
+    <data name="Přesunout soubor" xml:space="preserve"><value>Move file</value></data>
+    <data name="Vyberte složku" xml:space="preserve"><value>Select folder</value></data>
+    <data name="Zadejte název složky nebo nechte prázdné pro kořenovou složku" xml:space="preserve"><value>Enter folder name or leave empty for root folder</value></data>
+    <data name="Můžete použít lomítka (/) pro vnořené složky, např. 'Dokumenty/Práce'" xml:space="preserve"><value>You can use slashes (/) for nested folders, e.g. 'Documents/Work'</value></data>
+    <data name="Nebo vyberte existující složku:" xml:space="preserve"><value>Or select an existing folder:</value></data>
+    <data name="-- Vyberte složku --" xml:space="preserve"><value>-- Select folder --</value></data>
+    <data name="Filtrovat podle složky" xml:space="preserve"><value>Filter by folder</value></data>
+    <data name="Všechny soubory" xml:space="preserve"><value>All files</value></data>
 </root>

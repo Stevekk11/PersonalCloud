@@ -22,6 +22,8 @@ public class Document
     public long FileSize { get; set; }
     [Required]
     public string? StoragePath { get; set; }
+    [MaxLength(1000)]
+    public string? FolderPath { get; set; }
     public DateTime UploadedAt { get; set; }
     public string? LoginId { get; set; }
     [ForeignKey("LoginId")]

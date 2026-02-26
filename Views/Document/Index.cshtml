@@ -26,12 +26,21 @@
     @Html.AntiForgeryToken()
 </form>
 
+<!-- Filter by folder -->
+<div class="mb-3">
+    <label for="folderFilter" class="form-label">@Localizer["Filtrovat podle složky"]:</label>
+    <select id="folderFilter" class="form-select" style="max-width: 300px;" onchange="filterByFolder()">
+        <option value="">@Localizer["Všechny soubory"]</option>
+    </select>
+</div>
+
 @if (Model.DocumentsWithSignature.Any())
 {
     <table class="table table-bordered">
         <thead>
         <tr>
             <th>@Localizer["Název"]</th>
+            <th>@Localizer["Složka"]</th>
             <th>@Localizer["Nahráno dne"]</th>
             <th>@Localizer["Velikost (KB)"]</th>
             <th>@Localizer["Možnosti"]</th>
@@ -40,7 +49,7 @@
         <tbody>
         @foreach (var item in Model.DocumentsWithSignature)
         {
-            <tr>
+            <tr data-folder="@(item.Document.FolderPath ?? "")">
                 <td>
                     <div class="d-flex align-items-center">
                         @{
@@ -87,6 +96,16 @@
                     </div>
                 </td>
 
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Document.FolderPath))
+                    {
+                        <i class="bi bi-folder text-warning me-1"></i>@item.Document.FolderPath
+                    }
+                    else
+                    {
+                        <span class="text-muted">@Localizer["(Kořenová složka)"]</span>
+                    }
+                </td>
 
                 <td>@item.Document.UploadedAt.ToLocalTime().ToString("g")</td>
                 <td>@(item.Document.FileSize / 1024)</td>
@@ -94,6 +113,16 @@
                     <a asp-action="Download" asp-route-id="@item.Document.Id" asp-route-culture="@culture"
                        class="btn btn-sm btn-success">@Localizer["Stáhnout"]
                     </a>
+                    <button type="button" 
+                            class="btn btn-sm btn-info"
+                            onclick="showRenameModal(@item.Document.Id, '@Html.Raw(item.Document.FileName)')">
+                        <i class="bi bi-pencil"></i> @Localizer["Přejmenovat"]
+                    </button>
+                    <button type="button" 
+                            class="btn btn-sm btn-warning"
+                            onclick="showMoveModal(@item.Document.Id, '@Html.Raw(item.Document.FileName)', '@Html.Raw(item.Document.FolderPath)')">
+                        <i class="bi bi-folder-symlink"></i> @Localizer["Přesunout"]
+                    </button>
                     <form asp-action="Delete" asp-route-id="@item.Document.Id" method="post" style="display:inline;" asp-route-culture="@culture">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-sm btn-danger"
@@ -147,6 +176,67 @@ else
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rename Modal -->
+<div class="modal fade" id="renameModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Localizer["Přejmenovat soubor"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Rename" method="post" asp-route-culture="@culture">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <input type="hidden" id="renameDocumentId" name="id" />
+                    <div class="mb-3">
+                        <label for="newName" class="form-label">@Localizer["Nový název"]</label>
+                        <input type="text" class="form-control" id="newName" name="newName" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Zrušit"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Přejmenovat"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Move to Folder Modal -->
+<div class="modal fade" id="moveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Localizer["Přesunout soubor"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="MoveToFolder" method="post" asp-route-culture="@culture">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <input type="hidden" id="moveDocumentId" name="id" />
+                    <p><strong id="moveFileName"></strong></p>
+                    <div class="mb-3">
+                        <label for="folderPath" class="form-label">@Localizer["Vyberte složku"]</label>
+                        <input type="text" class="form-control" id="folderPath" name="folderPath" 
+                               placeholder="@Localizer["Zadejte název složky nebo nechte prázdné pro kořenovou složku"]" />
+                        <div class="form-text">@Localizer["Můžete použít lomítka (/) pro vnořené složky, např. 'Dokumenty/Práce'"]</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Nebo vyberte existující složku:"]</label>
+                        <select id="existingFolders" class="form-select" onchange="selectExistingFolder()">
+                            <option value="">@Localizer["-- Vyberte složku --"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Zrušit"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Přesunout"]</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -236,5 +326,77 @@ else
                     `);
                 });
         }
+
+        /**
+         * Shows the rename modal for a document
+         */
+        function showRenameModal(documentId, currentName) {
+            $('#renameDocumentId').val(documentId);
+            $('#newName').val(currentName);
+            $('#renameModal').modal('show');
+        }
+
+        /**
+         * Shows the move to folder modal for a document
+         */
+        function showMoveModal(documentId, fileName, currentFolder) {
+            $('#moveDocumentId').val(documentId);
+            $('#moveFileName').text(fileName);
+            $('#folderPath').val(currentFolder || '');
+            
+            // Load existing folders
+            $.get('@Url.Action("GetFolders", "Document")')
+                .done(function (folders) {
+                    var select = $('#existingFolders');
+                    select.empty();
+                    select.append('<option value="">@Localizer["-- Vyberte složku --"]</option>');
+                    select.append('<option value="__ROOT__">@Localizer["(Kořenová složka)"]</option>');
+                    folders.forEach(function(folder) {
+                        select.append('<option value="' + folder + '">' + folder + '</option>');
+                    });
+                });
+            
+            $('#moveModal').modal('show');
+        }
+
+        /**
+         * Selects an existing folder from the dropdown
+         */
+        function selectExistingFolder() {
+            var selected = $('#existingFolders').val();
+            if (selected === '__ROOT__') {
+                $('#folderPath').val('');
+            } else if (selected) {
+                $('#folderPath').val(selected);
+            }
+        }
+
+        /**
+         * Filters the document table by folder
+         */
+        function filterByFolder() {
+            var selected = $('#folderFilter').val();
+            $('table tbody tr').each(function() {
+                var rowFolder = $(this).data('folder') || '';
+                if (selected === '' || rowFolder === selected) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        /**
+         * Initializes folder filter on page load
+         */
+        $(document).ready(function() {
+            $.get('@Url.Action("GetFolders", "Document")')
+                .done(function (folders) {
+                    var select = $('#folderFilter');
+                    folders.forEach(function(folder) {
+                        select.append('<option value="' + folder + '">' + folder + '</option>');
+                    });
+                });
+        });
     </script>
 }

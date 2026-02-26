@@ -361,4 +361,94 @@ public class DocumentController : Controller
         _logger.LogInformation($"User {User.Identity.Name} deleted document with ID {id}.");
         return RedirectToAction(nameof(Index));
     }
+
+    /// <summary>
+    /// Renames a document.
+    /// </summary>
+    /// <param name="id">The document ID</param>
+    /// <param name="newName">The new name for the document</param>
+    /// <returns></returns>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Rename(int id, string newName)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var success = await _documentService.RenameDocumentAsync(id, userId, newName);
+            
+            if (success)
+            {
+                TempData["UploadSuccess"] = "File renamed successfully.";
+                _logger.LogInformation($"User {User.Identity.Name} renamed document {id} to {newName}.");
+            }
+            else
+            {
+                TempData["UploadError"] = "Failed to rename file.";
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["UploadError"] = ex.Message;
+            _logger.LogWarning(ex, "Failed to rename document {DocumentId} for user {User}", id, User.Identity.Name);
+        }
+        catch (Exception ex)
+        {
+            TempData["UploadError"] = "An unexpected error occurred while renaming the file.";
+            _logger.LogError(ex, "Unexpected error while renaming document {DocumentId} for user {User}", id, User.Identity.Name);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    /// <summary>
+    /// Moves a document to a specified folder.
+    /// </summary>
+    /// <param name="id">The document ID</param>
+    /// <param name="folderPath">The folder path to move to</param>
+    /// <returns></returns>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MoveToFolder(int id, string? folderPath)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var success = await _documentService.MoveDocumentToFolderAsync(id, userId, folderPath);
+            
+            if (success)
+            {
+                TempData["UploadSuccess"] = "File moved successfully.";
+                _logger.LogInformation($"User {User.Identity.Name} moved document {id} to folder {folderPath ?? "(root)"}.");
+            }
+            else
+            {
+                TempData["UploadError"] = "Failed to move file.";
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["UploadError"] = ex.Message;
+            _logger.LogWarning(ex, "Failed to move document {DocumentId} for user {User}", id, User.Identity.Name);
+        }
+        catch (Exception ex)
+        {
+            TempData["UploadError"] = "An unexpected error occurred while moving the file.";
+            _logger.LogError(ex, "Unexpected error while moving document {DocumentId} for user {User}", id, User.Identity.Name);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    /// <summary>
+    /// Gets the list of folders for the current user as JSON.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<IActionResult> GetFolders()
+    {
+        var userId = GetCurrentUserId();
+        var folders = await _documentService.GetUserFoldersAsync(userId);
+        return Json(folders);
+    }
 }
