@@ -63,7 +63,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    //scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+    scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
 }
 //add localization
 var supportedCultures = new[] { "en", "cs" };

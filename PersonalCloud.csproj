@@ -37,13 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="app.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="UserDocs\" />
   </ItemGroup>
 
