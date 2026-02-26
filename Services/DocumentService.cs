@@ -158,4 +158,90 @@ public class DocumentService
             .OrderByDescending(d => d.UploadedAt)
             .FirstOrDefaultAsync();
     }
+
+    /// <summary>
+    /// Renames a document's display name (FileName property).
+    /// </summary>
+    /// <param name="documentId">The unique identifier of the document to rename.</param>
+    /// <param name="loginId">The unique identifier of the user who owns the document.</param>
+    /// <param name="newFileName">The new name for the document.</param>
+    /// <returns>A task representing the asynchronous operation, returning true if successful.</returns>
+    public async Task<bool> RenameDocumentAsync(int documentId, string loginId, string newFileName)
+    {
+        if (string.IsNullOrWhiteSpace(newFileName))
+        {
+            throw new ArgumentException("File name cannot be empty.", nameof(newFileName));
+        }
+
+        // Sanitize the filename to prevent path traversal
+        var sanitizedFileName = Path.GetFileName(newFileName);
+        if (string.IsNullOrWhiteSpace(sanitizedFileName) || sanitizedFileName != newFileName)
+        {
+            throw new ArgumentException("Invalid file name.", nameof(newFileName));
+        }
+
+        var document = await GetDocumentAsync(documentId, loginId);
+        if (document == null)
+        {
+            _logger.LogWarning("Attempted to rename non-existent document {DocumentId} for user {UserId}", documentId, loginId);
+            return false;
+        }
+
+        document.FileName = sanitizedFileName;
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Document {DocumentId} renamed to {NewFileName} for user {UserId}", documentId, sanitizedFileName, loginId);
+        return true;
+    }
+
+    /// <summary>
+    /// Gets a list of unique folder paths for a user.
+    /// </summary>
+    /// <param name="loginId">The unique identifier of the user.</param>
+    /// <returns>A task representing the asynchronous operation, containing a list of folder paths.</returns>
+    public async Task<List<string>> GetUserFoldersAsync(string loginId)
+    {
+        return await _context.Documents
+            .Where(d => d.LoginId == loginId && !string.IsNullOrEmpty(d.FolderPath))
+            .Select(d => d.FolderPath!)
+            .Distinct()
+            .OrderBy(f => f)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Moves a document to a specified folder.
+    /// </summary>
+    /// <param name="documentId">The unique identifier of the document to move.</param>
+    /// <param name="loginId">The unique identifier of the user who owns the document.</param>
+    /// <param name="folderPath">The folder path to move the document to. Use empty string or null for root.</param>
+    /// <returns>A task representing the asynchronous operation, returning true if successful.</returns>
+    public async Task<bool> MoveDocumentToFolderAsync(int documentId, string loginId, string? folderPath)
+    {
+        // Sanitize folder path to prevent path traversal
+        if (!string.IsNullOrWhiteSpace(folderPath))
+        {
+            var sanitizedPath = folderPath.Replace("\\", "/").Trim('/');
+            if (sanitizedPath.Contains("..") || sanitizedPath.Contains("~"))
+            {
+                throw new ArgumentException("Invalid folder path.", nameof(folderPath));
+            }
+            folderPath = sanitizedPath;
+        }
+        else
+        {
+            folderPath = null;
+        }
+
+        var document = await GetDocumentAsync(documentId, loginId);
+        if (document == null)
+        {
+            _logger.LogWarning("Attempted to move non-existent document {DocumentId} for user {UserId}", documentId, loginId);
+            return false;
+        }
+
+        document.FolderPath = folderPath;
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Document {DocumentId} moved to folder {FolderPath} for user {UserId}", documentId, folderPath ?? "(root)", loginId);
+        return true;
+    }
 }
