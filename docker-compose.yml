@@ -1,0 +1,27 @@
+﻿services:
+  personalcloud:
+    image: personalcloud
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=DataSource=/app/data/app.db;Cache=Shared
+      - Storage__Root=/app/UserDocs
+      - TZ=Europe/Prague
+      - SYNCFUSION_LICENSE_KEY=
+      - Email__Smtp__Host=smtp.gmail.com
+      - Email__Smtp__Port=587
+      - Email__Smtp__Username=veghmonik@gmail.com
+      - Email__Smtp__Password=digk nbfr feiv pngb
+      - Email__From=veghmonik@gmail.com
+      - SensorServer__Url=http://192.168.1.90:5000
+    volumes:
+      - ./UserDocs:/app/UserDocs
+      - ./Logs:/app/Logs
+      - ./data:/app/data
+    restart: always
+
+

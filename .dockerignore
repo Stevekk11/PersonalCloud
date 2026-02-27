@@ -1,0 +1,17 @@
+﻿**/.dockerignore
+**/.git
+**/.github
+**/.vs
+**/.vscode
+**/.idea
+**/bin
+**/obj
+**/logs
+**/TestResults
+**/UserDocs
+app.db
+app.db-shm
+app.db-wal
+.DS_Store
+.env
+
