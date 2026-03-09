@@ -26,6 +26,7 @@
     <PackageReference Include="SerialPortStream" Version="2.4.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.2" />
     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="31.2.4" />
     <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="31.2.4" />
     <PackageReference Include="Syncfusion.Presentation.Net.Core" Version="31.2.4" />

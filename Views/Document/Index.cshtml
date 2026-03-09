@@ -71,7 +71,12 @@
                             var isPreviewable = type == "application/pdf"
                                                 || type == "text/plain"
                                                 || type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                                || type == "application/msword";
+                                                || type == "application/msword"
+                                                || type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                                                || type == "application/vnd.ms-powerpoint"
+                                                || type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                                || type == "application/vnd.ms-excel";
+
                         }
                         <i class="@iconClass"></i>
                         @item.Document.FileName
@@ -274,7 +279,11 @@ else
                 let content = '';
                 if (type === 'application/pdf' ||
                     type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-                    type === 'application/msword') {
+                    type === 'application/msword' ||
+                    type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+                    type === 'application/vnd.ms-powerpoint' ||
+                    type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                    type === 'application/vnd.ms-excel') {
                     // Both PDF and Word documents will be displayed using the PDF viewer
                     content = `<iframe src="${previewUrl}" width="100%" height="600px"></iframe>`;
                 } else if (type.startsWith('image/')) {
