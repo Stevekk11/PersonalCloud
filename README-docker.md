@@ -8,7 +8,7 @@ This project is now dockerized and can be easily run using Docker and Docker Com
 2.  Open a terminal in the project root directory.
 3.  Build and start the container:
     ```bash
-    docker-compose up -d --build
+    sudo docker-compose up -d --build
     ```
 4.  The application will be available at `http://localhost:8080`.
 

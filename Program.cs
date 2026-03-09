@@ -46,7 +46,7 @@ const long fiveGb = 5L * 1024 * 1024 * 1024;
 
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = fiveGb;        // 5 GB
+    options.MultipartBodyLengthLimit = fiveGb; // 5 GB
     options.ValueLengthLimit = int.MaxValue;
     options.MultipartHeadersLengthLimit = int.MaxValue;
 });
@@ -54,10 +54,22 @@ builder.Services.Configure<FormOptions>(options =>
 // Kestrel server limits for large uploads
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.MaxRequestBodySize = fiveGb;       // 5 GB
+    options.Limits.MaxRequestBodySize = fiveGb; // 5 GB
 });
 
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+
+// Configure strict HSTS for production
+
+
+builder.Services.AddHsts(options =>
+{
+    options.Preload = true;
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(365);
+});
+
+
 //build the app
 var app = builder.Build();
 
@@ -65,6 +77,7 @@ using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
 }
+
 //add localization
 var supportedCultures = new[] { "en", "cs" };
 var localizationOptions = new RequestLocalizationOptions()
@@ -74,6 +87,10 @@ var localizationOptions = new RequestLocalizationOptions()
 
 localizationOptions.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
 app.UseRequestLocalization(localizationOptions);
+
+// Add security headers middleware
+app.UseMiddleware<SecurityHeadersMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -85,6 +102,9 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// Ensure the HSTS policy is also strict by configuring the Options
+// Already present: app.UseHsts();
 
 app.UseHttpsRedirection();
 app.UseRouting();
