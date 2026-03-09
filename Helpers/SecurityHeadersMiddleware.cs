@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-
-namespace PersonalCloud.Helpers
+﻿namespace PersonalCloud.Helpers
 {
     public class SecurityHeadersMiddleware
     {
@@ -14,12 +11,13 @@ namespace PersonalCloud.Helpers
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // Strict-Transport-Security (HSTS) — set explicitly so it is always present,
+            // regardless of environment or whether UseHsts() fires for this request.
+            context.Response.Headers.Append("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
             // Content-Security-Policy
-            // Allowing self, bootstrap icons cdn, and potentially needed inline styles/scripts for Razor views
-            // For a production 'A', we should ideally avoid 'unsafe-inline', but ASP.NET Core Identity and some libraries often need it.
-            // We'll start with a reasonably strict policy and adjust if needed.
             var csp = "default-src 'self'; " +
-                      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; https://cdn.jsdelivr.net;" + // Added unsafe-inline/eval for common library support, can be tightened later
+                      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
                       "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
                       "img-src 'self' data:; " +
                       "font-src 'self' https://cdn.jsdelivr.net; " +

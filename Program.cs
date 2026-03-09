@@ -88,9 +88,6 @@ var localizationOptions = new RequestLocalizationOptions()
 localizationOptions.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
 app.UseRequestLocalization(localizationOptions);
 
-// Add security headers middleware
-app.UseMiddleware<SecurityHeadersMiddleware>();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -99,14 +96,14 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
 
-// Ensure the HSTS policy is also strict by configuring the Options
-// Already present: app.UseHsts();
-
+// HSTS and HTTPS redirect run first so the header is set before anything else
+app.UseHsts();
 app.UseHttpsRedirection();
+
+// Security headers middleware (also sets HSTS explicitly to guarantee the header)
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseRouting();
 app.UseAuthorization();
 app.MapStaticAssets();
