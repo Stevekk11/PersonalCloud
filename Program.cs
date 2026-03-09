@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
@@ -27,6 +28,29 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Ensure all cookies are sent with Secure flag (HTTPS only)
+builder.Services.Configure<CookieAuthenticationOptions>(
+    Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme, options =>
+    {
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+    });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.Secure = CookieSecurePolicy.Always;
+    options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
+    options.MinimumSameSitePolicy = SameSiteMode.Strict;
+});
 builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddScoped<DocumentService>(provider =>
 {
@@ -104,6 +128,7 @@ app.UseHttpsRedirection();
 
 // Security headers middleware (also sets HSTS explicitly to guarantee the header)
 app.UseMiddleware<SecurityHeadersMiddleware>();
+app.UseCookiePolicy();
 app.UseRouting();
 app.UseAuthorization();
 app.MapStaticAssets();
