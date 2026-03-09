@@ -42,6 +42,9 @@
             // Permissions-Policy
             context.Response.Headers.Append("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
 
+            // Cross-Origin-Resource-Policy
+            context.Response.Headers.Append("Cross-Origin-Resource-Policy", "same-origin");
+
             await _next(context);
         }
     }
