@@ -18,11 +18,15 @@
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">@Localizer["Register"]</a>
+        <li class="nav-item m-1">
+            <a class="btn btn-outline-success w-100" asp-area="Identity" asp-page="/Account/Register">
+                <i class="bi bi-person-plus me-1"></i>@Localizer["Register"]
+            </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">@Localizer["Login"]</a>
+        <li class="nav-item m-1">
+            <a class="btn btn-primary w-100" asp-area="Identity" asp-page="/Account/Login">
+                <i class="bi bi-box-arrow-in-right me-1"></i>@Localizer["Login"]
+            </a>
         </li>
     }
 </ul>

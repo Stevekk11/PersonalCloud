@@ -9,7 +9,7 @@ using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.Pdf;
-using System.Drawing;
+using SixLabors.ImageSharp;
 using Syncfusion.XlsIO;
 using Syncfusion.XlsIORenderer;
 using Syncfusion.Presentation;
@@ -220,7 +220,7 @@ public class DocumentController : Controller
         }
 
         var absolutePath = Path.GetFullPath(doc.StoragePath);
-        using var image = Image.FromFile(absolutePath);
+        using var image = await Image.LoadAsync(absolutePath);
 
         return Json(new
         {
