@@ -45,4 +45,7 @@
     <data name="Uživatelský manuál" xml:space="preserve">
         <value>Uživatelský manuál</value>
     </data>
+    <data name="Logy" xml:space="preserve">
+        <value>Logy</value>
+    </data>
 </root>
