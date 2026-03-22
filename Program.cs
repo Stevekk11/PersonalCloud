@@ -11,6 +11,7 @@ using PersonalCloud.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Register Syncfusion license
 var syncfusionLicenseKey = builder.Configuration["SYNCFUSION_LICENSE_KEY"];
