@@ -18,7 +18,6 @@
                 <div class="form-floating mb-3">
                     <input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="@Localizer["EmailPlaceholder"]" />
                     <label asp-for="Input.Username" class="form-label">@Localizer["Username"]</label>
-                    <span asp-validation-for="Input.Username" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="@Localizer["PasswordPlaceholder"]" />

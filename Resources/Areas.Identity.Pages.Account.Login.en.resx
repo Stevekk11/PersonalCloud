@@ -28,7 +28,7 @@
     <value>Resend email confirmation</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Username</value>
+    <value>Username or e-mail</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>

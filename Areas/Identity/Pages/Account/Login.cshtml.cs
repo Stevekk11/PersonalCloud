@@ -40,8 +40,7 @@ namespace PersonalCloud.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string Username { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -49,9 +48,6 @@ namespace PersonalCloud.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
-
-            [Display(Name = "Username")]
-            public string Username { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -81,13 +77,28 @@ namespace PersonalCloud.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var loginUsername = Input.Username;
+                var user = await _userManager.FindByNameAsync(loginUsername);
+                if (user == null && loginUsername.Contains("@"))
+                {
+                    user = await _userManager.FindByEmailAsync(loginUsername);
+                    if (user != null)
+                    {
+                        loginUsername = user.UserName;
+                    }
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(loginUsername, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
                     
                     // Update LastLoginTime
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user == null) // This can happen if PasswordSignInAsync was successful with a username we didn't fetch yet
+                    {
+                        user = await _userManager.FindByNameAsync(loginUsername);
+                    }
+
                     if (user != null)
                     {
                         user.LastLoginTime = DateTime.UtcNow;

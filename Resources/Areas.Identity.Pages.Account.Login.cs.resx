@@ -28,7 +28,7 @@
     <value>Znovu odeslat potvrzení e-mailu</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Uživatelské jméno</value>
+    <value>Uživatelské jméno nebo e-mail</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Heslo</value>
