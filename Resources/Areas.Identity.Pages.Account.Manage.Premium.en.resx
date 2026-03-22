@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Prémiový účet" xml:space="preserve">
+    <value>Premium Account</value>
+  </data>
+  <data name="Stav Premium" xml:space="preserve">
+    <value>Premium Status</value>
+  </data>
+  <data name="Jste Premium uživatel!" xml:space="preserve">
+    <value>You are a Premium user!</value>
+  </data>
+  <data name="Máte přístup ke všem prémiovým funkcím." xml:space="preserve">
+    <value>You have access to all premium features.</value>
+  </data>
+  <data name="Zrušit Premium" xml:space="preserve">
+    <value>Downgrade from Premium</value>
+  </data>
+  <data name="Aktuálně máte standardní účet." xml:space="preserve">
+    <value>You currently have a standard account.</value>
+  </data>
+  <data name="Upgradujte na Premium pro odemknutí dalších funkcí!" xml:space="preserve">
+    <value>Upgrade to Premium to unlock additional features!</value>
+  </data>
+  <data name="Upgradovat na Premium" xml:space="preserve">
+    <value>Upgrade to Premium</value>
+  </data>
+  <data name="Prémiové účty jsou momentálně nedostupné kvůli omezené kapacitě úložiště." xml:space="preserve">
+    <value>Premium accounts are currently unavailable due to storage capacity limits.</value>
+  </data>
+  <data name="Kapacita systému" xml:space="preserve">
+    <value>System Capacity</value>
+  </data>
+  <data name="Dostupné místo na disku" xml:space="preserve">
+    <value>Available Disk Space</value>
+  </data>
+  <data name="Maximální počet Premium uživatelů" xml:space="preserve">
+    <value>Maximum Premium Users</value>
+  </data>
+  <data name="Aktuální počet Premium uživatelů" xml:space="preserve">
+    <value>Current Premium Users</value>
+  </data>
+  <data name="Volné sloty pro Premium" xml:space="preserve">
+    <value>Available Premium Slots</value>
+  </data>
+  <data name="Každý prémiový účet vyžaduje 50 GB volného místa na disku." xml:space="preserve">
+    <value>Each premium account requires 50 GB of available disk space.</value>
+  </data>
+</root>

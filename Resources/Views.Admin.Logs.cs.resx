@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin - Logy" xml:space="preserve">
+    <value>Admin - Logy</value>
+  </data>
+  <data name="Systémové logy" xml:space="preserve">
+    <value>Systémové logy</value>
+  </data>
+  <data name="Vyžadována autentizace administrátora" xml:space="preserve">
+    <value>Vyžadována autentizace administrátora</value>
+  </data>
+  <data name="Heslo administrátora" xml:space="preserve">
+    <value>Heslo administrátora</value>
+  </data>
+  <data name="Zadejte heslo administrátora" xml:space="preserve">
+    <value>Zadejte heslo administrátora</value>
+  </data>
+  <data name="Zobrazit logy" xml:space="preserve">
+    <value>Zobrazit logy</value>
+  </data>
+  <data name="Soubor logu" xml:space="preserve">
+    <value>Soubor logu</value>
+  </data>
+  <data name="Žádné soubory logů nebyly nalezeny" xml:space="preserve">
+    <value>Žádné soubory logů nebyly nalezeny</value>
+  </data>
+  <data name="Odhlásit se" xml:space="preserve">
+    <value>Odhlásit se</value>
+  </data>
+  <data name="Žádný soubor" xml:space="preserve">
+    <value>Žádný soubor</value>
+  </data>
+  <data name="Posledních 500 řádků" xml:space="preserve">
+    <value>Posledních 500 řádků</value>
+  </data>
+</root>
