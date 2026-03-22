@@ -11,12 +11,14 @@ public class AdminController : Controller
     private readonly IConfiguration _configuration;
     private readonly ILogger<AdminController> _logger;
     private readonly string _logsDirectory;
+    private readonly string _workDirectory;
 
     public AdminController(IConfiguration configuration, ILogger<AdminController> logger, IWebHostEnvironment env)
     {
         _configuration = configuration;
         _logger = logger;
         _logsDirectory = Path.Combine(env.ContentRootPath, "Logs");
+        _workDirectory = Path.Combine(env.ContentRootPath);
     }
 
     [HttpGet]
@@ -139,7 +141,7 @@ public class AdminController : Controller
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                WorkingDirectory = _logsDirectory // Or ContentRootPath?
+                WorkingDirectory = _workDirectory
             }
         };
 
