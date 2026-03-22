@@ -27,8 +27,8 @@
   <data name="ResendEmailConfirmation" xml:space="preserve">
     <value>Resend email confirmation</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>

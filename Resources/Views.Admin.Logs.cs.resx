@@ -49,4 +49,28 @@
   <data name="Posledních 500 řádků" xml:space="preserve">
     <value>Posledních 500 řádků</value>
   </data>
+  <data name="Správcovská konzole" xml:space="preserve">
+    <value>Správcovská konzole</value>
+  </data>
+  <data name="Admin - Konzole" xml:space="preserve">
+    <value>Admin - Konzole</value>
+  </data>
+  <data name="Zpět na logy" xml:space="preserve">
+    <value>Zpět na logy</value>
+  </data>
+  <data name="Otevřít konzoli" xml:space="preserve">
+    <value>Otevřít konzoli</value>
+  </data>
+  <data name="Zadejte příkaz..." xml:space="preserve">
+    <value>Zadejte příkaz...</value>
+  </data>
+  <data name="Spustit" xml:space="preserve">
+    <value>Spustit</value>
+  </data>
+  <data name="Výstup příkazu" xml:space="preserve">
+    <value>Výstup příkazu</value>
+  </data>
+  <data name="Kopírovat" xml:space="preserve">
+    <value>Kopírovat</value>
+  </data>
 </root>

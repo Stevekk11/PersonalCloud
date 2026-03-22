@@ -27,8 +27,8 @@
   <data name="ResendEmailConfirmation" xml:space="preserve">
     <value>Znovu odeslat potvrzení e-mailu</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>E-mail</value>
+  <data name="Username" xml:space="preserve">
+    <value>Uživatelské jméno</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Heslo</value>

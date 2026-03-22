@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -64,6 +65,95 @@ public class AdminController : Controller
     {
         HttpContext.Session.Remove(SessionKey);
         return RedirectToAction(nameof(Logs));
+    }
+
+    [HttpGet]
+    public IActionResult Console()
+    {
+        var model = new Models.AdminConsoleViewModel();
+
+        if (HttpContext.Session.GetString(SessionKey) != "true")
+            return View(model);
+
+        model.IsAuthenticated = true;
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Console(Models.AdminConsoleViewModel model)
+    {
+        if (HttpContext.Session.GetString(SessionKey) != "true")
+        {
+            var adminPassword = _configuration["AdminSettings:Password"];
+            if (string.IsNullOrEmpty(adminPassword))
+            {
+                model.ErrorMessage = "Admin password is not configured.";
+                return View(model);
+            }
+
+            var inputBytes = Encoding.UTF8.GetBytes(model.Password ?? string.Empty);
+            var expectedBytes = Encoding.UTF8.GetBytes(adminPassword);
+
+            if (!CryptographicOperations.FixedTimeEquals(inputBytes, expectedBytes))
+            {
+                _logger.LogWarning("Failed admin console access attempt from IP: {IP}", HttpContext.Connection.RemoteIpAddress);
+                model.ErrorMessage = "Invalid password.";
+                model.Password = null;
+                return View(model);
+            }
+
+            HttpContext.Session.SetString(SessionKey, "true");
+        }
+
+        model.IsAuthenticated = true;
+
+        if (!string.IsNullOrWhiteSpace(model.Command))
+        {
+            try
+            {
+                model.Output = await ExecuteBashCommand(model.Command);
+            }
+            catch (Exception ex)
+            {
+                model.Output = $"Error: {ex.Message}";
+            }
+        }
+
+        return View(model);
+    }
+
+    private async Task<string> ExecuteBashCommand(string command)
+    {
+        var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
+        var fileName = isWindows ? "cmd.exe" : "/bin/bash";
+        var arguments = isWindows ? $"/c {command}" : $"-c \"{command}\"";
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WorkingDirectory = _logsDirectory // Or ContentRootPath?
+            }
+        };
+
+        var output = new StringBuilder();
+        process.OutputDataReceived += (s, e) => { if (e.Data != null) output.AppendLine(e.Data); };
+        process.ErrorDataReceived += (s, e) => { if (e.Data != null) output.AppendLine(e.Data); };
+
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        await process.WaitForExitAsync();
+
+        return output.ToString();
     }
 
     private void PopulateLogContent(Models.AdminLogsViewModel model, string? selectedFile)

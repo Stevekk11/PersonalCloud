@@ -8,7 +8,12 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
-            <h2 class="mb-4"><i class="bi bi-journal-text me-2"></i>@Localizer["Systémové logy"]</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0"><i class="bi bi-journal-text me-2"></i>@Localizer["Systémové logy"]</h2>
+                <a asp-action="Console" class="btn btn-outline-dark btn-sm">
+                    <i class="bi bi-terminal me-1"></i>@Localizer["Správcovská konzole"]
+                </a>
+            </div>
 
             @if (!Model.IsAuthenticated)
             {
