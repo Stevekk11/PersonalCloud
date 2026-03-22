@@ -9,6 +9,7 @@ using PersonalCloud.Helpers;
 using PersonalCloud.Models;
 using PersonalCloud.Services;
 using Serilog;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
@@ -63,9 +64,6 @@ builder.Services.AddScoped<DocumentService>(provider =>
 });
 builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
 builder.Services.AddSingleton<SensorService>();
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .CreateLogger();
 // Configure max upload / request limits (5 GB)
 const long fiveGb = 5L * 1024 * 1024 * 1024;
 
@@ -90,6 +88,10 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext());
 
 // Configure strict HSTS for production
 
