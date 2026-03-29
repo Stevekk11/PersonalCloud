@@ -40,25 +40,21 @@
 <text x="5166" y="450" font-family="Arial, Helvetica, sans-serif" font-size="480" fill="#FFFFFF" text-anchor="middle" font-weight="900" letter-spacing="-8">PersonalCloud</text>
 <text x="5166" y="640" font-family="Arial, Helvetica, sans-serif" font-size="160" fill="#FFFFFF" text-anchor="middle" font-weight="300" letter-spacing="12">v 1.1.0</text>
 <text x="5166" y="840" font-family="Arial, Helvetica, sans-serif" font-size="120" fill="#FFFFFF" text-anchor="middle" font-weight="400" letter-spacing="2">Osobní cloudové úložiště s měřením teploty</text>
-<rect x="8973" y="1500" width="780" height="880" rx="30" fill="white" filter="url(#shadow)"/>
+<rect x="8973" y="1500" width="780" height="1150" rx="30" fill="white" filter="url(#shadow)"/>
 <image x="9013" y="1540" width="700" height="700" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAewAAAHsAQAAAAA4UaPNAAADOUlEQVR4nO2dUY7rIAxFr5/6T3bQ/S9rdgAr8PswBkP705l2Wk8uqtpAOApIxrKNQ0Xxg9L+/YQGiBMnTpz4q3GoBk1fFEWt9OsKFB23+rV31pp67sTPiV8AoFSrCKBNUCraoU1Mvr1FOhE6v3vwxIl/o1zsR9CF2cRei4q3S1FYi4v96PzuwRMn/gRcK+SqcJtHK9AEReWA1pc/nTjx1+OXrd71PCCm9s2Ab8e8fubTiRP/fbzL/JBmbYe4YYN2wKz6YeqUGju/e/DEiX8Xb2IF6IaNxWfkqmbVyBGI0PkjBk+c+GPlgkVvo1eb9LhNE7XQDWChm7Vz6rkTPycOHaViBOeHA2ufGahfP4zPE0+IY0p7nZGZsSc1V0H1dutQDUw9d+LnxMM+bPHgpFen5h/LwVeBd0g9d+Lnxl3gLQ4/FfuXdAd2BCqbiIgvjc8YPHHiD+Kqav5p33gq2oMztjn15beCYeNL4P2DJ0780bI7sK7kpyd749KatU97nnhOPJgx/j0vpmyH/qMz7XniKfGp54e2n14qgmNbdFkCjFUSz4pf0LOCIesNbQcs96YdlmkzMo1l5limnjvxc+JuvdcQog8qHcNj9TdHxhsltOeJ58Snx9qrdYYlR/uyFVVB24Z4ZnyR6ijPwBLAiVuxs5EyTzwfvgdnlsik6h2bB+G1Wco88Xx40Nsee4/GPBAavQqAMk88LY6huqPH2sU+2vNlXkyxp8wTz4fvKZS9dSyBaMxULB/qeeIp8TWv0jV8dGNx69tW7sMSz4sHPR8TiW9S5WdqcfBnKfPEE+LTVgf2bPlN1BEPAAH1PPGkePBPg6gv18vG62bhp5478XPiIT6/xmT6Xa/G/dleKPPEU+JhmzUE4Uf7ticbQ5q054nnxPdziaNIT7WP9dAD0LYhnhffzyWOR/ZpExRFOyyv2Mo8rPgJTydO/PfxELcpu2F/5xUSK8y3If4n8aL9xAM7vszteRS1t8Jf+3TixF+F39HzM2izbcIiZB0o7XniufGuxq006ZLfJEo7ispV5cD8z5HPGDxx4o+UCxBl2MtwWotKqd2lBew79E49d+LnxIX/lUmcOHHifxr/DylPkZkGlHw3AAAAAElFTkSuQmCC"/>
-<text x="9363" y="2350" font-family="Arial, Helvetica, sans-serif" font-size="75" fill="#1565C0" text-anchor="middle" font-weight="bold">GitHub</text>
-<text x="9363" y="2435" font-family="Arial, Helvetica, sans-serif" font-size="58" fill="#546E7A" text-anchor="middle" font-weight="normal">Skenuj pro zdrojový kód</text>
+<text x="9363" y="2400" font-family="Arial, Helvetica, sans-serif" font-size="58" fill="#546E7A" text-anchor="middle" font-weight="normal">Skenuj pro zdrojový kód</text>
+<text x="9363" y="2530" font-family="Arial, Helvetica, sans-serif" font-size="75" fill="#1565C0" text-anchor="middle" font-weight="bold">GitHub</text>
 <path d="M0,1450 Q2483,1570 4966,1450 Q7449,1330 9933,1450 L9933,1450 L0,1450 Z" fill="url(#headerGrad)" opacity="0.5"/>
-<rect x="160" y="1610" width="9613" height="940" fill="#BBDEFB" rx="40" stroke="#1976D2" stroke-width="4"/>
+<rect x="160" y="1610" width="8500" height="940" fill="#BBDEFB" rx="40" stroke="#1976D2" stroke-width="4"/>
 <rect x="160" y="1610" width="18" height="940" fill="#1565C0" rx="9"/>
 <text x="4966" y="1720" font-family="Arial, Helvetica, sans-serif" font-size="120" fill="#1565C0" text-anchor="middle" font-weight="bold">O projektu</text>
-<text x="340" y="1810.0" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">Tento projekt se zabývá realizací cloudového úložiště pro jednotlivce i firmy. Cílem</text>
-<text x="340" y="1910.75" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">je vytvořit funkční cloudové úložiště s měřením teploty a vlhkosti v serverovně.</text>
+<text x="340" y="1810.0" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">Tento projekt se zabývá realizací cloudového úložiště pro jednotlivce i firmy. Cílem<tspan dx="250">Pro přihlášení a registraci uživatelů je použito knihovny .NET Identity Core.</tspan></text>
+<text x="340" y="1910.75" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">je vytvořit funkční cloudové úložiště s měřením teploty a vlhkosti v serverovně. <tspan dx="250">Aplikace podporuje vícefázové ověření přes Microsoft Authenticator. Uživatelské rozhraní používá Bootstrap CSS a HTML5.</tspan></text>
 <text x="340" y="2041.5" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">Projekt je vytvořený na platformě ASP.NET v jazyce C#, s použitím knihovny Entity</text>
 <text x="340" y="2142.25" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">Framework Core a Serilog pro logování. Architektura projektu je MVC</text>
 <text x="340" y="2243.0" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">(Model-View-Controller) + Services.</text>
 <text x="340" y="2373.75" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">V projektu je integrovaná deska STM32 (Nucleo), která pomocí senzoru DHT22 posílá</text>
 <text x="340" y="2474.5" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">informace o teplotě do přehledu pro včasný zásah při přehřátí serveru.</text>
-<text x="340" y="2605.25" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">Pro přihlášení a registraci uživatelů je použito knihovny .NET Identity Core.</text>
-<text x="340" y="2706.0" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">Aplikace podporuje vícefázové ověření přes Microsoft Authenticator. Uživatelské</text>
-<text x="340" y="2806.75" font-family="Arial, Helvetica, sans-serif" font-size="65" fill="#0D1B2A" text-anchor="start" font-weight="normal">rozhraní používá Bootstrap CSS a HTML5.</text>
-<text x="4966" y="2730" font-family="Arial, Helvetica, sans-serif" font-size="150" fill="#1565C0" text-anchor="middle" font-weight="900">Technologie</text>
 <line x1="300" y1="2790" x2="9633" y2="2790" stroke="#1565C0" stroke-width="6" opacity="0.4"/>
 <rect x="160" y="2870" width="830" height="140" fill="#512BD4" rx="30" filter="url(#shadow2)"/>
 <circle cx="235" cy="2940" r="45" fill="white" opacity="0.2"/>
@@ -218,7 +214,7 @@
 <text x="4137" y="7370" font-family="Arial, Helvetica, sans-serif" font-size="130" fill="#FFFFFF" text-anchor="middle" font-weight="900">2</text>
 <text x="4137" y="7505" font-family="Arial, Helvetica, sans-serif" font-size="58" fill="#FFFFFF" text-anchor="middle" font-weight="300">Jazykové mutace (CZ / EN)</text>
 <text x="5792" y="7370" font-family="Arial, Helvetica, sans-serif" font-size="130" fill="#FFFFFF" text-anchor="middle" font-weight="900">DHT22</text>
-<text x="5792" y="7505" font-family="Arial, Helvetica, sans-serif" font-size="58" fill="#FFFFFF" text-anchor="middle" font-weight="300">IoT senzor teploty & vlhkosti</text>
+<text x="5792" y="7505" font-family="Arial, Helvetica, sans-serif" font-size="58" fill="#FFFFFF" text-anchor="middle" font-weight="300">IoT senzor teploty a vlhkosti</text>
 <text x="7447" y="7370" font-family="Arial, Helvetica, sans-serif" font-size="130" fill="#FFFFFF" text-anchor="middle" font-weight="900">MVC</text>
 <text x="7447" y="7505" font-family="Arial, Helvetica, sans-serif" font-size="58" fill="#FFFFFF" text-anchor="middle" font-weight="300">Architektura projektu</text>
 <text x="9102" y="7370" font-family="Arial, Helvetica, sans-serif" font-size="130" fill="#FFFFFF" text-anchor="middle" font-weight="900">300 DPI</text>
@@ -228,3 +224,4 @@
 <rect x="20" y="20" width="9893" height="14003" fill="none" stroke="#1565C0" stroke-width="24" rx="40" opacity="0.25"/>
 <rect x="50" y="50" width="9833" height="13943" fill="none" stroke="#1565C0" stroke-width="6" rx="30" opacity="0.12"/>
 </svg>
+
