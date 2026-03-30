@@ -29,6 +29,8 @@
                 <label asp-for="Input.ConfirmPassword">@Localizer["ConfirmPassword"]</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <!-- Cloudflare Turnstile -->
+            <div class="cf-turnstile mb-3" data-sitekey="@Model.TurnstileSiteKey"></div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["Register"]</button>
         </form>
     </div>
@@ -36,4 +38,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 }

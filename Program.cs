@@ -64,6 +64,7 @@ builder.Services.AddScoped<DocumentService>(provider =>
 });
 builder.Services.AddScoped<IPremiumCapacityService, PremiumCapacityService>();
 builder.Services.AddSingleton<SensorService>();
+builder.Services.AddHttpClient<ITurnstileService, TurnstileService>();
 // Configure max upload / request limits (5 GB)
 const long fiveGb = 5L * 1024 * 1024 * 1024;
 

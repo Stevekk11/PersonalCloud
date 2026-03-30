@@ -30,8 +30,10 @@
                         @Localizer["RememberMe"]
                     </label>
                 </div>
+                <!-- Cloudflare Turnstile -->
+                <div class="cf-turnstile mb-3" data-sitekey="@Model.TurnstileSiteKey"></div>
                 <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["LogIn"]</button>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["LogInButton"]</button>
                 </div>
                 <div class="mt-3">
                     <p>
@@ -51,4 +53,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 }

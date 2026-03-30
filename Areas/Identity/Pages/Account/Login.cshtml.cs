@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using PersonalCloud.Models;
+using PersonalCloud.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace PersonalCloud.Areas.Identity.Pages.Account
 {
@@ -19,38 +21,44 @@ namespace PersonalCloud.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ITurnstileService _turnstileService;
+        private readonly IConfiguration _configuration;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, ITurnstileService turnstileService, IConfiguration configuration)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _turnstileService = turnstileService;
+            _configuration = configuration;
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new();
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme> ExternalLogins { get; set; } = new List<AuthenticationScheme>();
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } = string.Empty;
+
+        public string TurnstileSiteKey => _configuration["Turnstile:SiteKey"] ?? string.Empty;
 
         [TempData]
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public class InputModel
         {
             [Required]
-            public string Username { get; set; }
+            public string Username { get; set; } = string.Empty;
 
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string Password { get; set; } = string.Empty;
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string? returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -67,9 +75,17 @@ namespace PersonalCloud.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
+
+            var turnstileResponse = Request.Form["cf-turnstile-response"].ToString();
+            var isTurnstileValid = await _turnstileService.VerifyTokenAsync(turnstileResponse);
+
+            if (!isTurnstileValid)
+            {
+                ModelState.AddModelError(string.Empty, "CAPTCHA verification failed. Please try again.");
+            }
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
@@ -109,7 +125,7 @@ namespace PersonalCloud.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { returnUrl, Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
