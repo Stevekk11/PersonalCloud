@@ -1,0 +1,97 @@
+﻿@startuml PersonalCloud_ClassDiagram
+
+skinparam BackgroundColor #32a889
+
+top to bottom direction
+
+skinparam class {
+    BackgroundColor White
+    ArrowColor #1565C0
+    BorderColor #1565C0
+    ' Bold text for class names and members
+    FontName Arial Bold
+    AttributeFontName Arial Bold
+}
+
+package PersonalCloud.Models {
+    class ApplicationUser {
+        **+bool IsPremium**
+        **+DateTime? LastLoginTime**
+    }
+
+    class Document {
+        **+int Id**
+        **+string? FileName**
+        **+string? ContentType**
+        **+long FileSize**
+        **+string? StoragePath**
+        **+string? FolderPath**
+        **+DateTime UploadedAt**
+        **+string? LoginId**
+        **+ApplicationUser? User**
+    }
+
+    class HomeDashboardViewModel {
+        **+long TotalStorageUsed**
+        **+long MaxStorage**
+        **+double StoragePercentage**
+        **+float? Temperature**
+        **+float? Humidity**
+    }
+}
+
+package PersonalCloud.Services {
+    interface ITurnstileService {
+        **+VerifyTokenAsync(string? token, string? remoteIp) : Task<bool>**
+    }
+
+    class TurnstileService {
+        **-HttpClient _httpClient**
+        **-string _secretKey**
+        **+VerifyTokenAsync(string? token, string? remoteIp) : Task<bool>**
+    }
+
+    class DocumentService {
+        **-ApplicationDbContext _context**
+        **-string _storageRoot**
+        **+GetUserStorageUsedAsync(string loginId) : Task<long>**
+        **+AddDocumentAsync(string loginId, IFormFile file) : Task<Document>**
+    }
+
+    interface IPremiumCapacityService {
+        **+IsPremiumAsync(string userId) : Task<bool>**
+    }
+
+    class SensorService {
+        **+GetLatestDataAsync() : Task<SensorData>**
+    }
+}
+
+package PersonalCloud.Helpers {
+    class SecurityHeadersMiddleware {
+        **-RequestDelegate _next**
+        **+InvokeAsync(HttpContext context) : Task**
+    }
+
+    class SmtpEmailSender {
+        **-IConfiguration _configuration**
+        **-ILogger<SmtpEmailSender> _logger**
+        **+SendEmailAsync(string email, string subject, string htmlMessage) : Task**
+    }
+}
+
+package PersonalCloud.Data {
+    class ApplicationDbContext {
+        **+DbSet<Document> Documents**
+    }
+}
+
+' Relationships
+ApplicationUser "1" *-- "0..*" Document : owns
+DocumentService ..> Document : manages
+DocumentService --> ApplicationDbContext : uses
+ApplicationDbContext o-- Document : contains
+ITurnstileService <|.. TurnstileService
+SmtpEmailSender ..|> IEmailSender
+
+@enduml
