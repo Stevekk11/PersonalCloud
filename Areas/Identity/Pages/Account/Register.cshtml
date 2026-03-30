@@ -30,7 +30,7 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <!-- Cloudflare Turnstile -->
-            <div class="cf-turnstile mb-3" data-sitekey="@Model.TurnstileSiteKey"></div>
+            <div class="cf-turnstile mb-3" data-sitekey="@Model.TurnstileSiteKey" appearance="always"></div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["Register"]</button>
         </form>
     </div>

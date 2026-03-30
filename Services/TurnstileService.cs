@@ -34,8 +34,8 @@ namespace PersonalCloud.Services
 
             var requestData = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("secret", _secretKey),
-                new KeyValuePair<string, string>("response", token)
+                new("secret", _secretKey),
+                new("response", token)
             };
 
             if (!string.IsNullOrEmpty(remoteIp))

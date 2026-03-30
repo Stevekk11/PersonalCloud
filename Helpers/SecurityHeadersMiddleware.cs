@@ -17,7 +17,7 @@
 
             // Content-Security-Policy
             var csp = "default-src 'self'; " +
-                      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+                      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://challenges.cloudflare.com/turnstile/v0/api.js;" +
                       "object-src 'none'; " +
                       "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
                       "img-src 'self' data:; " +
@@ -32,7 +32,7 @@
             context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
 
             // X-Frame-Options
-            context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+            //context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
 
             // X-XSS-Protection
             context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
