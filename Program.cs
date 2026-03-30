@@ -145,6 +145,8 @@ localizationOptions.RequestCultureProviders.Insert(0, new QueryStringRequestCult
 app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
+app.UseForwardedHeaders();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -154,15 +156,11 @@ else
     app.UseExceptionHandler("/Home/Error");
 }
 
-// HSTS and HTTPS redirect run first so the header is set before anything else
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHsts();
-    app.UseHttpsRedirection();
-}
+app.UseHsts();
+app.UseHttpsRedirection();
+
 
 // Security headers middleware (also sets HSTS explicitly to guarantee the header)
-app.UseForwardedHeaders();
 app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseCookiePolicy();
 app.UseRouting();
