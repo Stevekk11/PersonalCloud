@@ -9,7 +9,6 @@ using PersonalCloud.Helpers;
 using PersonalCloud.Models;
 using PersonalCloud.Services;
 using Serilog;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
@@ -31,27 +30,42 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? throw new InvalidOperationException("Google ClientId not found.");
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? throw new InvalidOperationException("Google ClientSecret not found.");
+    });
+
 // Ensure all cookies are sent with Secure flag (HTTPS only)
 builder.Services.Configure<CookieAuthenticationOptions>(
     Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme, options =>
     {
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+    });
+
+builder.Services.Configure<CookieAuthenticationOptions>(
+    Microsoft.AspNetCore.Identity.IdentityConstants.ExternalScheme, options =>
+    {
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
     });
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SameSite = SameSiteMode.Lax;
 });
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.Secure = CookieSecurePolicy.Always;
     options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
-    options.MinimumSameSitePolicy = SameSiteMode.Strict;
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
 });
 builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddScoped<DocumentService>(provider =>
@@ -85,7 +99,7 @@ builder.Services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SameSite = SameSiteMode.Lax;
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();

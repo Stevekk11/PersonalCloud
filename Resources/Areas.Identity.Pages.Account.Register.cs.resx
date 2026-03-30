@@ -73,4 +73,10 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Potvrzení hesla</value>
   </data>
+  <data name="NoExternalLogins" xml:space="preserve">
+    <value>Nemáte žádný jiný účet</value>
+  </data>
+  <data name="UseAnotherService" xml:space="preserve">
+    <value>Využijte jiný účet pro přihášení</value>
+  </data>
 </root>

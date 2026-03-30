@@ -73,4 +73,13 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm Password</value>
   </data>
+  <data name="UseAnotherService" xml:space="preserve">
+    <value>Use another service to register.</value>
+  </data>
+  <data name="NoExternalLogins" xml:space="preserve">
+    <value>There are no external authentication services configured.</value>
+  </data>
+  <data name="LogInUsingExternalAccount" xml:space="preserve">
+    <value>Register using your {0} account</value>
+  </data>
 </root>

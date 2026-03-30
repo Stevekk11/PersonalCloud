@@ -42,4 +42,10 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Zapamatovat si mě</value>
   </data>
+  <data name="UseAnotherService" xml:space="preserve">
+    <value>Použijte jiný účet k přihlášení.</value>
+  </data>
+  <data name="NoExternalLogins" xml:space="preserve">
+    <value>Nemáte žádný jiný účet</value>
+  </data>
 </root>

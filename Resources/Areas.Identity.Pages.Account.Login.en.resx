@@ -42,4 +42,16 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Remember me?</value>
   </data>
+  <data name="UseAnotherService" xml:space="preserve">
+    <value>Use another service to log in.</value>
+  </data>
+  <data name="NoExternalLogins" xml:space="preserve">
+    <value>There are no external authentication services configured.</value>
+  </data>
+  <data name="LogInUsingExternalAccount" xml:space="preserve">
+    <value>Log in using your {0} account</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
 </root>
