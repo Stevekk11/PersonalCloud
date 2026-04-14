@@ -1,0 +1,212 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@using System.Globalization
+@model PersonalCloud.Models.DepartureViewModel
+@{
+    ViewData["Title"] = Localizer["Odjezdy PID"];
+    var culture = CultureInfo.CurrentUICulture.Name;
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+<div class="container-fluid px-3">
+    <div class="row justify-content-center">
+        <div class="col-12">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="display-4 mb-3">@ViewData["Title"]</h1>
+                <h2 class="h4 text-muted">
+                    @Localizer["Čas"]: <span id="clock">@Model.Now.ToLongTimeString()</span>,
+                    @Model.Now.ToString("d.M.yyyy")
+                </h2>
+            </div>
+
+            <!-- Error Message -->
+            @if (!string.IsNullOrEmpty(Model.Error))
+            {
+                <div class="alert alert-danger text-center mb-4" role="alert">
+                    @Model.Error
+                </div>
+            }
+
+            <!-- Search Form -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <form asp-action="Search" asp-controller="Departures" method="post" asp-route-culture="@culture">
+                                <div class="mb-3">
+                                    <label for="stop-name" class="form-label fw-bold">@Localizer["Název zastávky:"]</label>
+                                    <input name="stopName"
+                                           id="stop-name"
+                                           class="form-control form-control-lg"
+                                           value="@Model.StopName"
+                                           placeholder="@Model.Placeholder"
+                                           list="stopSuggestions"
+                                           autocomplete="off"/>
+                                    <datalist id="stopSuggestions">
+                                        @foreach (var s in Model.AvailableStops.Distinct())
+                                        {
+                                            <option value="@s" />
+                                        }
+                                    </datalist>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">@Localizer["Zobrazit"]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Departures Table Header (Desktop) -->
+            <div class="d-none d-lg-block">
+                <div class="card shadow mb-3">
+                    <div class="card-body py-4">
+                        <div class="row text-center fw-bold fs-5">
+                            <div class="col-lg-2 text-nowrap">@Localizer["Číslo linky"]</div>
+                            <div class="col-lg-3 text-nowrap">@Localizer["Směr"]</div>
+                            <div class="col-lg-2 text-nowrap">@Localizer["Čas odjezdu (min)"]</div>
+                            <div class="col-lg-1 text-nowrap">@Localizer["Nástupiště"]</div>
+                            <div class="col-lg-1 text-nowrap">AC</div>
+                            <div class="col-lg-1 text-nowrap">@Localizer["Bezbariérový"]</div>
+                            <div class="col-lg-2 text-nowrap">@Localizer["Zpoždění"]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Departures List -->
+            @if (Model.Departures?.Any() ?? false)
+            {
+                @foreach (var dep in Model.Departures)
+                {
+                    <!-- Desktop Layout -->
+                    <div class="d-none d-lg-block">
+                        <div class="card shadow mb-3">
+                            <div class="card-body py-4">
+                                <div class="row text-center align-items-center">
+                                    <div class="col-lg-2">
+                                        <span class="badge bg-primary fs-5 px-3 py-2">@dep.Route</span>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <strong class="fs-5">@dep.Destination</strong>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <span class="fs-4 fw-bold text-primary">@dep.Minutes</span>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <span class="fs-5">@dep.PlatformCode</span>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        @if (dep.Ac)
+                                        {
+                                            <i class="bi bi-snow" style="font-size: 2rem; color: #0dcaf0;"></i>
+                                        }
+                                    </div>
+                                    <div class="col-lg-1">
+                                        @if (dep.IsWheelchairAccessible)
+                                        {
+                                            <i class="bi bi-person-wheelchair" style="font-size: 2rem;"></i>
+                                        }
+                                    </div>
+                                    <div class="col-lg-2">
+                                        @if (dep.Delay == 0)
+                                        {
+                                            <span class="badge bg-success fs-6 px-3 py-2">@Localizer["Bez zpoždění"]</span>
+                                        }
+                                        else if (dep.Delay <= 3)
+                                        {
+                                            <span class="badge bg-warning text-dark fs-6 px-3 py-2">@dep.Delay min</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger fs-6 px-3 py-2">@dep.Delay min</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile/Tablet Layout -->
+                    <div class="d-lg-none">
+                        <div class="card shadow mb-4">
+                            <div class="card-body p-4">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <span class="badge bg-primary fs-6 mb-2 px-3 py-2">@dep.Route</span>
+                                        <div class="small text-muted">@Localizer["Linka"]</div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div class="fs-3 fw-bold text-primary">@dep.Minutes</div>
+                                        <div class="small text-muted">@Localizer["minut"]</div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        @if (dep.Delay == 0)
+                                        {
+                                            <span class="badge bg-success fs-6 px-3 py-2">@Localizer["Bez zpoždění"]</span>
+                                        }
+                                        else if (dep.Delay <= 5)
+                                        {
+                                            <span class="badge bg-warning text-dark fs-6 px-3 py-2">+@dep.Delay min</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger fs-6 px-3 py-2">+@dep.Delay min</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong class="fs-5">@dep.Destination</strong>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-4">
+                                        <small class="text-muted">@Localizer["Nástupiště:"] </small>
+                                        <strong class="fs-6">@dep.PlatformCode</strong>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        @if (dep.Ac)
+                                        {
+                                            <i class="bi bi-snow text-info" style="font-size: 1.5rem;"></i>
+                                            <small class="text-muted ms-1">@Localizer["Klimatizace"]</small>
+                                        }
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        @if (dep.IsWheelchairAccessible)
+                                        {
+                                            <i class="bi bi-person-wheelchair"></i>
+                                            <small class="text-muted ms-1">@Localizer["Bezbariérový"]</small>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center my-5">
+                    <div class="display-1 text-muted mb-3"><img src="~/bus.png" alt="no" width="128px" height="128px"/></div>
+                    <p class="text-muted fs-5">@Localizer["Žádné odjezdy k zobrazení"]</p>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+function updateClock() {
+    const clockElem = document.getElementById('clock');
+    const now = new Date();
+    clockElem.textContent =
+        now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>

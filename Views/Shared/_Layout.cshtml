@@ -23,8 +23,8 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+            <div class="navbar-collapse collapse d-sm-inline-flex">
+                <ul class="navbar-nav mx-auto">
                     <li class="nav-item m-2">
                         <a class="nav-link text-dark d-flex align-items-center btn btn-outline-primary" asp-area="" asp-controller="Home"
                            asp-action="Index" asp-route-culture="@culture">
@@ -47,8 +47,8 @@
                         </a>
                     </li>
                     <li class="nav-item m-2">
-                        <a class="nav-link text-dark d-flex align-items-center btn btn-outline-warning" asp-area="" asp-controller="Home"
-                           asp-action="PidBoard" asp-route-culture="@culture">
+                        <a class="nav-link text-dark d-flex align-items-center btn btn-outline-warning" asp-area="" asp-controller="Departures"
+                           asp-action="Transport" asp-route-culture="@culture">
                             <i class="bi bi-bus-front me-2"></i>
                             @Localizer["Odjezdové tabule PID"]
                         </a>
@@ -81,7 +81,9 @@
                             @Localizer["Logy"]
                         </a>
                     </li>
-                    <div class="dropdown ms-auto nav-item d-flex align-items-center p-3">
+                </ul>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown p-3">
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-translate me-1"></i>
                             @CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()
@@ -98,8 +100,10 @@
                                 </a>
                             </li>
                         </ul>
-                    </div>
-                    @await Component.InvokeAsync("StorageUsage")
+                    </li>
+                    <li class="nav-item">
+                        @await Component.InvokeAsync("StorageUsage")
+                    </li>
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>
