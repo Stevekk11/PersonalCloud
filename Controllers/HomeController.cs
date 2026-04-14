@@ -60,13 +60,7 @@ public class HomeController : Controller
         _logger.LogInformation("Visiting Privacy page.");
         return View();
     }
-
-    public IActionResult PidBoard()
-    {
-        _logger.LogInformation("Visiting PidBoard page.");
-        return View();
-    }
-
+    
     public IActionResult UserManual()
     {
         _logger.LogInformation("Visiting UserManual page.");
