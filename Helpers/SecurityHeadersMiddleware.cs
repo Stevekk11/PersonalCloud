@@ -46,8 +46,8 @@
 
             // Cross-Origin-Resource-Policy
             context.Response.Headers.Append("Cross-Origin-Resource-Policy", "same-origin");
-            context.Response.Headers.Append("X-Clacks-Overhead:"," GNU Terry Pratchett");
-            context.Response.Headers.Append("X-One-Ring:","To Rule Them All");
+            context.Response.Headers.Append("X-Clacks-Overhead", "GNU Terry Pratchett");
+            context.Response.Headers.Append("X-One-Ring", "To Rule Them All");
 
             await _next(context);
         }
