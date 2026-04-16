@@ -24,6 +24,9 @@ public class Document
     public string? StoragePath { get; set; }
     [MaxLength(1000)]
     public string? FolderPath { get; set; }
+    public int? FolderId { get; set; }
+    [ForeignKey("FolderId")]
+    public Folder? Folder { get; set; }
     public DateTime UploadedAt { get; set; }
     public string? LoginId { get; set; }
     [ForeignKey("LoginId")]

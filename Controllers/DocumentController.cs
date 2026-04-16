@@ -52,22 +52,36 @@ public class DocumentController : Controller
 
     /// <summary>
     /// Displays the user's document management dashboard, listing all documents associated
-    /// with the currently authenticated user.
+    /// with the currently authenticated user, optionally filtered by folder.
     /// </summary>
+    /// <param name="folderId">The ID of the folder to view, or null for the root.</param>
     /// <returns>A view displaying the user's documents and associated data.</returns>
     /// <exception cref="Exception">Thrown if the authenticated user's information cannot be retrieved.</exception>
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? folderId = null)
     {
         var userId = GetCurrentUserId();
-        _logger.LogInformation("User {UserId} is viewing their documents.", userId);
-        var docs = await _documentService.GetUserDocumentsAsync(userId);
+        _logger.LogInformation("User {UserId} is viewing folder {FolderId}.", userId, folderId?.ToString() ?? "root");
+
+        var docs = await _documentService.GetDocumentsInFolderAsync(userId, folderId);
         var documentsWithSignature = docs.Select(doc => new DocumentWithSignature
         {
             Document = doc,
             IsPdfSigned = false
         }).ToList();
 
-        return View(new DocumentViewModel { DocumentsWithSignature = documentsWithSignature });
+        var subFolders = await _documentService.GetSubFoldersAsync(userId, folderId);
+        var breadcrumb = await _documentService.GetBreadcrumbAsync(folderId, userId);
+        var allFolders = await _documentService.GetAllUserFoldersAsync(userId);
+        Folder? currentFolder = folderId.HasValue ? await _documentService.GetFolderAsync(folderId.Value, userId) : null;
+
+        return View(new DocumentViewModel
+        {
+            DocumentsWithSignature = documentsWithSignature,
+            CurrentFolder = currentFolder,
+            SubFolders = subFolders,
+            Breadcrumb = breadcrumb,
+            AllFolders = allFolders
+        });
     }
 
 
@@ -75,22 +89,23 @@ public class DocumentController : Controller
     /// Handles the file upload process for the currently authenticated user. The uploaded file is stored and associated with the user's account.
     /// </summary>
     /// <param name="file">The file being uploaded by the user.</param>
+    /// <param name="folderId">Optional folder ID to upload the file into.</param>
     /// <returns>An <see cref="IActionResult"/> that redirects to the index page after the file is successfully uploaded or returns an error if the upload fails.</returns>
     /// <exception cref="Exception">Thrown if no file is selected for upload or if an error occurs during file processing.</exception>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    public async Task<IActionResult> UploadFile(IFormFile file, int? folderId = null)
     {
         if (file == null || file.Length == 0)
         {
             TempData["UploadError"] = "No file selected.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { folderId });
         }
 
         var userId = GetCurrentUserId();
         try
         {
-            await _documentService.AddDocumentAsync(userId, file);
+            await _documentService.AddDocumentToFolderAsync(userId, file, folderId);
             _logger.LogInformation($"User {User.Identity.Name} uploaded a new document with name {file.FileName}.");
         }
         catch (ArgumentException ex)
@@ -98,24 +113,24 @@ public class DocumentController : Controller
             TempData["UploadError"] = ex.Message;
             _logger.LogWarning(ex, "Upload blocked for user {User} with file {FileName}", User.Identity.Name,
                 file.FileName);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { folderId });
         }
         catch (InvalidOperationException ex)
         {
             TempData["UploadError"] = ex.Message;
             _logger.LogWarning(ex, "Storage limit exceeded for user {User} with file {FileName}", User.Identity.Name,
                 file.FileName);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { folderId });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error while uploading file {FileName} for user {User}", file.FileName,
                 User.Identity.Name);
             TempData["UploadError"] = "An unexpected error occurred while uploading the file.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { folderId });
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { folderId });
     }
 
     /// <summary>
@@ -351,15 +366,16 @@ public class DocumentController : Controller
     /// Deletes a specific document from the user's account.
     /// </summary>
     /// <param name="id">The id of the to be deleted document</param>
+    /// <param name="folderId">The current folder ID to redirect back to</param>
     /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, int? folderId = null)
     {
         var userId = GetCurrentUserId();
         await _documentService.DeleteDocumentAsync(id, userId);
         _logger.LogInformation($"User {User.Identity.Name} deleted document with ID {id}.");
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { folderId });
     }
 
     /// <summary>
@@ -367,10 +383,11 @@ public class DocumentController : Controller
     /// </summary>
     /// <param name="id">The document ID</param>
     /// <param name="newName">The new name for the document</param>
+    /// <param name="folderId">The current folder ID to redirect back to</param>
     /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Rename(int id, string newName)
+    public async Task<IActionResult> Rename(int id, string newName, int? folderId = null)
     {
         try
         {
@@ -398,28 +415,29 @@ public class DocumentController : Controller
             _logger.LogError(ex, "Unexpected error while renaming document {DocumentId} for user {User}", id, User.Identity.Name);
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { folderId });
     }
 
     /// <summary>
-    /// Moves a document to a specified folder.
+    /// Moves a document to a specified folder by folder ID.
     /// </summary>
-    /// <param name="id">The document ID</param>
-    /// <param name="folderPath">The folder path to move to</param>
+    /// <param name="documentId">The document ID</param>
+    /// <param name="targetFolderId">The target folder ID (null = root)</param>
+    /// <param name="currentFolderId">The current folder ID to redirect back to</param>
     /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> MoveToFolder(int id, string? folderPath)
+    public async Task<IActionResult> MoveToFolder(int documentId, int? targetFolderId, int? currentFolderId = null)
     {
         try
         {
             var userId = GetCurrentUserId();
-            var success = await _documentService.MoveDocumentToFolderAsync(id, userId, folderPath);
+            var success = await _documentService.MoveDocumentToFolderByIdAsync(documentId, userId, targetFolderId);
             
             if (success)
             {
                 TempData["UploadSuccess"] = "File moved successfully.";
-                _logger.LogInformation($"User {User.Identity.Name} moved document {id} to folder {folderPath ?? "(root)"}.");
+                _logger.LogInformation($"User {User.Identity.Name} moved document {documentId} to folder {targetFolderId?.ToString() ?? "(root)"}.");
             }
             else
             {
@@ -429,15 +447,41 @@ public class DocumentController : Controller
         catch (ArgumentException ex)
         {
             TempData["UploadError"] = ex.Message;
-            _logger.LogWarning(ex, "Failed to move document {DocumentId} for user {User}", id, User.Identity.Name);
+            _logger.LogWarning(ex, "Failed to move document {DocumentId} for user {User}", documentId, User.Identity.Name);
         }
         catch (Exception ex)
         {
             TempData["UploadError"] = "An unexpected error occurred while moving the file.";
-            _logger.LogError(ex, "Unexpected error while moving document {DocumentId} for user {User}", id, User.Identity.Name);
+            _logger.LogError(ex, "Unexpected error while moving document {DocumentId} for user {User}", documentId, User.Identity.Name);
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { folderId = currentFolderId });
+    }
+
+    /// <summary>
+    /// AJAX endpoint: moves a document to a folder (used for drag-and-drop).
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MoveFileApi(int documentId, int? targetFolderId)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var success = await _documentService.MoveDocumentToFolderByIdAsync(documentId, userId, targetFolderId);
+            if (success)
+            {
+                _logger.LogInformation("User {User} drag-dropped document {DocId} to folder {FolderId}",
+                    User.Identity!.Name, documentId, targetFolderId?.ToString() ?? "(root)");
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, error = "Failed to move file." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error moving document {DocumentId} via drag-drop", documentId);
+            return Json(new { success = false, error = ex.Message });
+        }
     }
 
     /// <summary>
@@ -448,7 +492,90 @@ public class DocumentController : Controller
     public async Task<IActionResult> GetFolders()
     {
         var userId = GetCurrentUserId();
-        var folders = await _documentService.GetUserFoldersAsync(userId);
-        return Json(folders);
+        var folders = await _documentService.GetAllUserFoldersAsync(userId);
+        return Json(folders.Select(f => new { f.Id, f.Name, f.ParentFolderId }));
     }
-}
+
+    /// <summary>
+    /// Creates a new folder for the current user.
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateFolder(string name, int? parentFolderId = null)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            await _documentService.CreateFolderAsync(userId, name, parentFolderId);
+            TempData["UploadSuccess"] = $"Folder '{name}' created.";
+            _logger.LogInformation("User {User} created folder '{Name}' under parent {ParentId}", User.Identity!.Name, name, parentFolderId?.ToString() ?? "(root)");
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["UploadError"] = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            TempData["UploadError"] = "An unexpected error occurred while creating the folder.";
+            _logger.LogError(ex, "Error creating folder '{Name}' for user {User}", name, User.Identity!.Name);
+        }
+
+        return RedirectToAction(nameof(Index), new { folderId = parentFolderId });
+    }
+
+    /// <summary>
+    /// Renames a folder.
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RenameFolder(int id, string newName, int? parentFolderId = null)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var success = await _documentService.RenameFolderAsync(id, userId, newName);
+            if (success)
+            {
+                TempData["UploadSuccess"] = "Folder renamed successfully.";
+                _logger.LogInformation("User {User} renamed folder {Id} to '{NewName}'", User.Identity!.Name, id, newName);
+            }
+            else
+            {
+                TempData["UploadError"] = "Failed to rename folder.";
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["UploadError"] = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            TempData["UploadError"] = "An unexpected error occurred while renaming the folder.";
+            _logger.LogError(ex, "Error renaming folder {Id} for user {User}", id, User.Identity!.Name);
+        }
+
+        return RedirectToAction(nameof(Index), new { folderId = parentFolderId });
+    }
+
+    /// <summary>
+    /// Deletes a folder. Documents inside are moved to the parent folder.
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteFolder(int id, int? parentFolderId = null)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            await _documentService.DeleteFolderAsync(id, userId);
+            TempData["UploadSuccess"] = "Folder deleted. Files were moved to the parent folder.";
+            _logger.LogInformation("User {User} deleted folder {Id}", User.Identity!.Name, id);
+        }
+        catch (Exception ex)
+        {
+            TempData["UploadError"] = "An unexpected error occurred while deleting the folder.";
+            _logger.LogError(ex, "Error deleting folder {Id} for user {User}", id, User.Identity!.Name);
+        }
+
+        return RedirectToAction(nameof(Index), new { folderId = parentFolderId });
+    }}
