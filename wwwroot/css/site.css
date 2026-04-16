@@ -29,3 +29,70 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+/* ===== Folder System Styles ===== */
+.folder-card {
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px;
+}
+
+.folder-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+}
+
+.folder-card.drag-over {
+    outline: 2px solid #0d6efd;
+    background: #e8f0fe !important;
+    transform: scale(1.04);
+}
+
+.folder-icon {
+    font-size: 2.5rem;
+    display: block;
+}
+
+.folder-name {
+    font-size: 0.82rem;
+}
+
+.folder-actions {
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.folder-card:hover .folder-actions {
+    opacity: 1;
+}
+
+/* File rows */
+.file-row {
+    transition: background 0.1s;
+}
+
+.file-row.dragging {
+    opacity: 0.45;
+    background: #f0f4ff;
+}
+
+.file-row:hover .drag-handle {
+    color: #6c757d !important;
+}
+
+/* Parent drop zone */
+.drop-zone-back {
+    border: 2px dashed #adb5bd;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #6c757d;
+    text-align: center;
+    cursor: default;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.drop-zone-back.drag-over {
+    border-color: #0d6efd;
+    background: #e8f0fe;
+    color: #0d6efd;
+}

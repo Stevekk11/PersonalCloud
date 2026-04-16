@@ -111,5 +111,53 @@
   <data name="Všechny soubory" xml:space="preserve">
     <value>Všechny soubory</value>
   </data>
+  <data name="Nová složka" xml:space="preserve">
+    <value>Nová složka</value>
+  </data>
+  <data name="Název složky" xml:space="preserve">
+    <value>Název složky</value>
+  </data>
+  <data name="Zadejte název složky" xml:space="preserve">
+    <value>Zadejte název složky</value>
+  </data>
+  <data name="Vytvořit" xml:space="preserve">
+    <value>Vytvořit</value>
+  </data>
+  <data name="Přejmenovat složku" xml:space="preserve">
+    <value>Přejmenovat složku</value>
+  </data>
+  <data name="Smazat složku" xml:space="preserve">
+    <value>Smazat složku</value>
+  </data>
+  <data name="Smazat tuto složku? Soubory budou přesunuty do nadřazené složky." xml:space="preserve">
+    <value>Smazat tuto složku? Soubory budou přesunuty do nadřazené složky.</value>
+  </data>
+  <data name="Složky" xml:space="preserve">
+    <value>Složky</value>
+  </data>
+  <data name="Soubory" xml:space="preserve">
+    <value>Soubory</value>
+  </data>
+  <data name="Žádné soubory v této složce." xml:space="preserve">
+    <value>Žádné soubory v této složce.</value>
+  </data>
+  <data name="Zpět" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="Vyberte cílovou složku" xml:space="preserve">
+    <value>Vyberte cílovou složku</value>
+  </data>
+  <data name="Soubor" xml:space="preserve">
+    <value>Soubor</value>
+  </data>
+  <data name="Přesunout do nadřazené složky" xml:space="preserve">
+    <value>Přesunout do nadřazené složky</value>
+  </data>
+  <data name="Soubor byl přesunut." xml:space="preserve">
+    <value>Soubor byl přesunut.</value>
+  </data>
+  <data name="Přesun se nezdařil." xml:space="preserve">
+    <value>Přesun se nezdařil.</value>
+  </data>
 </root>
 

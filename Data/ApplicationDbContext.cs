@@ -16,6 +16,7 @@ namespace PersonalCloud.Data;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Document> Documents { get; set; }
+    public DbSet<Folder> Folders { get; set; }
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
@@ -25,6 +26,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(builder);
         builder.Entity<Document>().HasIndex(p => new { p.FileName }).HasDatabaseName("IX_FileName");
+
+        builder.Entity<Folder>()
+            .HasOne(f => f.ParentFolder)
+            .WithMany(f => f.SubFolders)
+            .HasForeignKey(f => f.ParentFolderId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Document>()
+            .HasOne(d => d.Folder)
+            .WithMany(f => f.Documents)
+            .HasForeignKey(d => d.FolderId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 
 }
