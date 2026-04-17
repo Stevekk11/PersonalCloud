@@ -47,18 +47,8 @@ public class DocumentService
     /// <returns>A task representing the asynchronous operation, with a Document object that contains the details of the uploaded document.</returns>
     public async Task<Document> AddDocumentAsync(string loginId, IFormFile file)
     {
-        var disallowedExtensions = new[]
-        {
-            ".cs", ".exe",".cshtml",".js"
-        };
-
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
 
-        if (disallowedExtensions.Contains(fileExtension))
-        {
-            _logger.LogWarning("File upload blocked: disallowed extension {Extension} for user {UserId}", fileExtension, loginId);
-            throw new ArgumentException($"File type '{fileExtension}' is not allowed for security reasons.");
-        }
 
         // Check storage limit
         var currentUsage = await GetUserStorageUsedAsync(loginId);
@@ -243,5 +233,221 @@ public class DocumentService
         await _context.SaveChangesAsync();
         _logger.LogInformation("Document {DocumentId} moved to folder {FolderPath} for user {UserId}", documentId, folderPath ?? "(root)", loginId);
         return true;
+    }
+
+    // -----------------------------------------------------------------------
+    // Folder management (new ID-based system)
+    // -----------------------------------------------------------------------
+
+    /// <summary>
+    /// Creates a new folder for the user.
+    /// </summary>
+    public async Task<Folder> CreateFolderAsync(string loginId, string name, int? parentFolderId)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Folder name cannot be empty.", nameof(name));
+
+        // Sanitize folder name
+        var invalidChars = Path.GetInvalidFileNameChars().Concat(new[] { '/', '\\', '.' }).Distinct().ToArray();
+        if (name.IndexOfAny(invalidChars) >= 0)
+            throw new ArgumentException("Folder name contains invalid characters.", nameof(name));
+
+        // Verify parent folder belongs to user
+        if (parentFolderId.HasValue)
+        {
+            var parent = await _context.Folders.FirstOrDefaultAsync(f => f.Id == parentFolderId && f.LoginId == loginId);
+            if (parent == null)
+                throw new ArgumentException("Parent folder not found.", nameof(parentFolderId));
+        }
+
+        // Check for duplicate name in same parent
+        var exists = await _context.Folders.AnyAsync(f =>
+            f.LoginId == loginId &&
+            f.ParentFolderId == parentFolderId &&
+            f.Name == name);
+        if (exists)
+            throw new ArgumentException($"A folder named '{name}' already exists here.");
+
+        var folder = new Folder
+        {
+            Name = name,
+            ParentFolderId = parentFolderId,
+            LoginId = loginId,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Folders.Add(folder);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Folder '{FolderName}' (Id={FolderId}) created for user {UserId}", name, folder.Id, loginId);
+        return folder;
+    }
+
+    /// <summary>
+    /// Deletes a folder. All documents inside are moved to the parent folder (or root).
+    /// Sub-folders are also deleted recursively.
+    /// </summary>
+    public async Task<bool> DeleteFolderAsync(int folderId, string loginId)
+    {
+        var folder = await _context.Folders.FirstOrDefaultAsync(f => f.Id == folderId && f.LoginId == loginId);
+        if (folder == null)
+        {
+            _logger.LogWarning("Attempted to delete non-existent folder {FolderId} for user {UserId}", folderId, loginId);
+            return false;
+        }
+
+        await DeleteFolderRecursiveAsync(folder, loginId);
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Folder {FolderId} deleted for user {UserId}", folderId, loginId);
+        return true;
+    }
+
+    private async Task DeleteFolderRecursiveAsync(Folder folder, string loginId)
+    {
+        // Move documents to parent folder
+        var docs = await _context.Documents.Where(d => d.FolderId == folder.Id && d.LoginId == loginId).ToListAsync();
+        foreach (var doc in docs)
+        {
+            doc.FolderId = folder.ParentFolderId;
+        }
+
+        // Recurse into sub-folders
+        var subFolders = await _context.Folders.Where(f => f.ParentFolderId == folder.Id && f.LoginId == loginId).ToListAsync();
+        foreach (var sub in subFolders)
+        {
+            // Reparent sub-folders to this folder's parent
+            sub.ParentFolderId = folder.ParentFolderId;
+        }
+
+        _context.Folders.Remove(folder);
+    }
+
+    /// <summary>
+    /// Renames a folder.
+    /// </summary>
+    public async Task<bool> RenameFolderAsync(int folderId, string loginId, string newName)
+    {
+        if (string.IsNullOrWhiteSpace(newName))
+            throw new ArgumentException("Folder name cannot be empty.", nameof(newName));
+
+        var invalidChars = Path.GetInvalidFileNameChars().Concat(new[] { '/', '\\', '.' }).Distinct().ToArray();
+        if (newName.IndexOfAny(invalidChars) >= 0)
+            throw new ArgumentException("Folder name contains invalid characters.", nameof(newName));
+
+        var folder = await _context.Folders.FirstOrDefaultAsync(f => f.Id == folderId && f.LoginId == loginId);
+        if (folder == null) return false;
+
+        // Check for duplicate in same parent
+        var exists = await _context.Folders.AnyAsync(f =>
+            f.LoginId == loginId &&
+            f.ParentFolderId == folder.ParentFolderId &&
+            f.Name == newName &&
+            f.Id != folderId);
+        if (exists)
+            throw new ArgumentException($"A folder named '{newName}' already exists here.");
+
+        folder.Name = newName;
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Folder {FolderId} renamed to '{NewName}' for user {UserId}", folderId, newName, loginId);
+        return true;
+    }
+
+    /// <summary>
+    /// Gets the immediate sub-folders of a given folder (or root if folderId is null).
+    /// </summary>
+    public async Task<List<Folder>> GetSubFoldersAsync(string loginId, int? parentFolderId)
+    {
+        return await _context.Folders
+            .Where(f => f.LoginId == loginId && f.ParentFolderId == parentFolderId)
+            .OrderBy(f => f.Name)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Gets all folders for a user (flat list for move-to-folder dropdown).
+    /// </summary>
+    public async Task<List<Folder>> GetAllUserFoldersAsync(string loginId)
+    {
+        return await _context.Folders
+            .Where(f => f.LoginId == loginId)
+            .OrderBy(f => f.Name)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Gets a single folder by ID, ensuring it belongs to the given user.
+    /// </summary>
+    public async Task<Folder?> GetFolderAsync(int folderId, string loginId)
+    {
+        return await _context.Folders.FirstOrDefaultAsync(f => f.Id == folderId && f.LoginId == loginId);
+    }
+
+    /// <summary>
+    /// Builds the breadcrumb trail from root to the given folder.
+    /// </summary>
+    public async Task<List<Folder>> GetBreadcrumbAsync(int? folderId, string loginId)
+    {
+        var breadcrumb = new List<Folder>();
+        if (!folderId.HasValue) return breadcrumb;
+
+        var current = await _context.Folders.FirstOrDefaultAsync(f => f.Id == folderId && f.LoginId == loginId);
+        while (current != null)
+        {
+            breadcrumb.Insert(0, current);
+            if (current.ParentFolderId.HasValue)
+                current = await _context.Folders.FirstOrDefaultAsync(f => f.Id == current.ParentFolderId && f.LoginId == loginId);
+            else
+                current = null;
+        }
+        return breadcrumb;
+    }
+
+    /// <summary>
+    /// Moves a document to a folder by folder ID (null = root).
+    /// </summary>
+    public async Task<bool> MoveDocumentToFolderByIdAsync(int documentId, string loginId, int? folderId)
+    {
+        if (folderId.HasValue)
+        {
+            var folder = await _context.Folders.FirstOrDefaultAsync(f => f.Id == folderId && f.LoginId == loginId);
+            if (folder == null)
+                throw new ArgumentException("Target folder not found.");
+        }
+
+        var document = await GetDocumentAsync(documentId, loginId);
+        if (document == null) return false;
+
+        document.FolderId = folderId;
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Document {DocumentId} moved to folder {FolderId} for user {UserId}", documentId, folderId?.ToString() ?? "(root)", loginId);
+        return true;
+    }
+
+    /// <summary>
+    /// Gets documents within a specific folder (or root if folderId is null).
+    /// </summary>
+    public async Task<List<Document>> GetDocumentsInFolderAsync(string loginId, int? folderId)
+    {
+        return await _context.Documents
+            .Where(d => d.LoginId == loginId && d.FolderId == folderId)
+            .OrderByDescending(d => d.UploadedAt)
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Adds a document to the specified folder (or root if folderId is null).
+    /// </summary>
+    public async Task<Document> AddDocumentToFolderAsync(string loginId, IFormFile file, int? folderId)
+    {
+        var document = await AddDocumentAsync(loginId, file);
+        if (folderId.HasValue)
+        {
+            var folder = await _context.Folders.FirstOrDefaultAsync(f => f.Id == folderId && f.LoginId == loginId);
+            if (folder != null)
+            {
+                document.FolderId = folderId;
+                await _context.SaveChangesAsync();
+            }
+        }
+        return document;
     }
 }

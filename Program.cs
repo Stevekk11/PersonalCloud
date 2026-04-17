@@ -173,11 +173,17 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/downloads",
     OnPrepareResponse = ctx =>
     {
-        // Prevent execution of dangerous files
-        var extensions = new[] { ".cs", ".exe", ".dll", ".config", ".json" };
-        if (extensions.Contains(Path.GetExtension(ctx.File.PhysicalPath).ToLower()))
+        // Enforce security headers for all files in UserDocs
+        ctx.Context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+        
+        // Prevent execution of dangerous files by forcing download
+        var dangerousExtensions = new[] { ".cs", ".exe", ".dll", ".config", ".json", ".cshtml", ".js", ".html", ".htm", ".cmd", ".bat", ".vbs", ".ps1" };
+        var extension = Path.GetExtension(ctx.File.PhysicalPath).ToLower();
+        
+        if (dangerousExtensions.Contains(extension))
         {
             ctx.Context.Response.ContentType = "application/octet-stream";
+            ctx.Context.Response.Headers.Append("Content-Disposition", "attachment; filename=\"" + Path.GetFileName(ctx.File.PhysicalPath) + "\"");
         }
     }
 });
