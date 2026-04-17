@@ -154,11 +154,21 @@ public class DocumentController : Controller
             if (doc == null)
                 return NotFound();
 
-            var mimeType = doc.ContentType ?? "application/octet-stream";
             var absolutePath = Path.GetFullPath(doc.StoragePath);
-
             if (!System.IO.File.Exists(absolutePath))
                 return NotFound();
+
+            var mimeType = doc.ContentType ?? "application/octet-stream";
+            
+            // Security: Prevent execution of dangerous types by forcing download/nosniff
+            var dangerousExtensions = new[] { ".cs", ".exe", ".dll", ".config", ".json", ".cshtml", ".js", ".html", ".htm", ".cmd", ".bat", ".vbs", ".ps1" };
+            var extension = Path.GetExtension(doc.FileName).ToLower();
+            
+            if (dangerousExtensions.Contains(extension))
+            {
+                mimeType = "application/octet-stream";
+            }
+
             _logger.LogInformation($"User {User.Identity.Name} downloaded document with the name {doc.FileName}.");
             return PhysicalFile(absolutePath, mimeType, doc.FileName);
         }
@@ -271,6 +281,17 @@ public class DocumentController : Controller
         if (!System.IO.File.Exists(absolutePath))
             return NotFound();
 
+        // Security: Prevent preview/execution of dangerous types
+        var dangerousExtensions = new[] { ".exe", ".dll", ".config", ".cshtml", ".html", ".htm", ".cmd", ".bat", ".vbs", ".ps1" };
+        var extension = Path.GetExtension(doc.FileName).ToLower();
+        
+        Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+        if (dangerousExtensions.Contains(extension))
+        {
+            return Forbid("Preview of this file type is disabled for security reasons.");
+        }
+
         // Handle Word documents
         if (mimeType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
             mimeType == "application/msword")
@@ -339,6 +360,12 @@ public class DocumentController : Controller
         }
 
         // For all other file types, use the existing preview logic
+        // Ensure text files are served as text/plain to be previewable but not executable
+        if (mimeType.StartsWith("text/") || extension == ".cs" || extension == ".js" || extension == ".json")
+        {
+            mimeType = "text/plain";
+        }
+
         return PhysicalFile(absolutePath, mimeType, enableRangeProcessing: true);
     }
 

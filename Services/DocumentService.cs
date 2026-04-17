@@ -47,18 +47,8 @@ public class DocumentService
     /// <returns>A task representing the asynchronous operation, with a Document object that contains the details of the uploaded document.</returns>
     public async Task<Document> AddDocumentAsync(string loginId, IFormFile file)
     {
-        var disallowedExtensions = new[]
-        {
-            ".cs", ".exe",".cshtml",".js"
-        };
-
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
 
-        if (disallowedExtensions.Contains(fileExtension))
-        {
-            _logger.LogWarning("File upload blocked: disallowed extension {Extension} for user {UserId}", fileExtension, loginId);
-            throw new ArgumentException($"File type '{fileExtension}' is not allowed for security reasons.");
-        }
 
         // Check storage limit
         var currentUsage = await GetUserStorageUsedAsync(loginId);
