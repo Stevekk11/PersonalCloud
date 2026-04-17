@@ -49,6 +49,15 @@ public class HomeController : Controller
                     model.LatestFileName = latestDoc.FileName;
                     model.LatestFileUploadedAt = latestDoc.UploadedAt;
                 }
+
+                var allDocs = await _documentService.GetUserDocumentsAsync(user.Id);
+                model.FileTypeDistribution = allDocs
+                    .GroupBy(d => Path.GetExtension(d.FileName ?? "").ToLower())
+                    .ToDictionary(g => string.IsNullOrEmpty(g.Key) ? "Unknown" : g.Key, g => g.Count());
+
+                model.StorageUsageDistribution = allDocs
+                    .GroupBy(d => Path.GetExtension(d.FileName ?? "").ToLower())
+                    .ToDictionary(g => string.IsNullOrEmpty(g.Key) ? "Unknown" : g.Key, g => g.Sum(d => d.FileSize));
             }
         }
 

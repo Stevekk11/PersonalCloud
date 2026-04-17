@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PersonalCloud.Models;
 
@@ -21,4 +22,7 @@ public class HomeDashboardViewModel
     public double? Temperature { get; set; }
 
     public double? Humidity { get; set; }
+
+    public Dictionary<string, int>? FileTypeDistribution { get; set; }
+    public Dictionary<string, long>? StorageUsageDistribution { get; set; }
 }

@@ -107,6 +107,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <strong>@Localizer["Počet souborů podle typu"]</strong>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="fileTypeChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <strong>@Localizer["Využití místa podle typu (bytů)"]</strong>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="storageUsageChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }
 else
@@ -168,5 +191,55 @@ else
         setInterval(updateSensorData, 10000); // Update every 10 seconds
         // Initial update after page load
         setTimeout(updateSensorData, 1000);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileTypeData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.FileTypeDistribution ?? new Dictionary<string, int>()));
+            const storageUsageData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.StorageUsageDistribution ?? new Dictionary<string, long>()));
+
+            const colors = [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)'
+            ];
+
+            if (Object.keys(fileTypeData).length > 0) {
+                new Chart(document.getElementById('fileTypeChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(fileTypeData),
+                        datasets: [{
+                            data: Object.values(fileTypeData),
+                            backgroundColor: colors
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            if (Object.keys(storageUsageData).length > 0) {
+                new Chart(document.getElementById('storageUsageChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(storageUsageData),
+                        datasets: [{
+                            data: Object.values(storageUsageData),
+                            backgroundColor: colors
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
     </script>
 }
