@@ -174,16 +174,20 @@
                                           || type == "application/vnd.ms-powerpoint" ? "bi bi-file-earmark-ppt text-warning"
                                         : type.StartsWith("video/") ? "bi bi-file-earmark-play text-danger"
                                         : type.Contains("zip") || type.Contains("compressed") ? "bi bi-file-earmark-zip text-muted"
+                                        : type.StartsWith("text/") ? "bi bi-file-earmark-text text-secondary"
                                         : "bi bi-file-earmark text-secondary";
 
-                                    var isPreviewable = type == "application/pdf"
-                                                        || type == "text/plain"
-                                                        || type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                                        || type == "application/msword"
-                                                        || type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                                                        || type == "application/vnd.ms-powerpoint"
-                                                        || type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                                        || type == "application/vnd.ms-excel";
+                                    var isPreviewable =
+                                        (type.StartsWith("text/", StringComparison.OrdinalIgnoreCase)
+                                         && !type.Contains("octet-stream", StringComparison.OrdinalIgnoreCase))
+                                        || type == "application/pdf"
+                                        || type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                        || type == "application/msword"
+                                        || type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                                        || type == "application/vnd.ms-powerpoint"
+                                        || type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                        || type == "application/vnd.ms-excel";
+                                    ;
                                 }
                                 <i class="@iconClass fs-5"></i>
                                 <span class="text-truncate" style="max-width:260px;" title="@item.Document.FileName">@item.Document.FileName</span>
