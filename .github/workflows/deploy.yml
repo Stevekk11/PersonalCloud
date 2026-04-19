@@ -19,6 +19,7 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             cd PersonalCloud
-            git pull
+            git fetch --all
+            git reset --hard origin/master
             dotnet add package SkiaSharp.NativeAssets.Linux --version 2.88.3
             pm2 restart PersonalCloud
