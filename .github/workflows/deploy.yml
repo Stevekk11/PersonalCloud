@@ -21,5 +21,5 @@ jobs:
             cd PersonalCloud
             git fetch --all
             git reset --hard origin/master
-            dotnet add package SkiaSharp.NativeAssets.Linux --version 2.88.3
+            dotnet add package SkiaSharp.NativeAssets.Linux --version 3.116.1
             pm2 restart PersonalCloud
