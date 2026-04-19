@@ -47,10 +47,6 @@ public class DocumentService
     /// <returns>A task representing the asynchronous operation, with a Document object that contains the details of the uploaded document.</returns>
     public async Task<Document> AddDocumentAsync(string loginId, IFormFile file)
     {
-        var fileExtension = Path.GetExtension(file.FileName).ToLower();
-
-
-        // Check storage limit
         var currentUsage = await GetUserStorageUsedAsync(loginId);
         if (currentUsage + file.Length > MaxStoragePerUser)
         {
@@ -449,5 +445,32 @@ public class DocumentService
             }
         }
         return document;
+    }
+
+    /// <summary>
+    /// Adds multiple documents to the specified folder (or root if folderId is null).
+    /// </summary>
+    public async Task<List<Document>> AddDocumentsToFolderAsync(string loginId, List<IFormFile> files, int? folderId)
+    {
+        var currentUsage = await GetUserStorageUsedAsync(loginId);
+        var totalNewSize = files.Sum(f => f.Length);
+        
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == loginId);
+        var limit = user?.IsPremium == true ? MaxStoragePerPremiumUser : MaxStoragePerUser;
+
+        if (currentUsage + totalNewSize > limit)
+        {
+            _logger.LogWarning("Bulk file upload blocked: storage limit would be exceeded for user {UserId}", loginId);
+            throw new InvalidOperationException($"Storage limit exceeded. Total size of files ({totalNewSize / 1024 / 1024} MB) exceeds remaining capacity.");
+        }
+
+        var uploadedDocuments = new List<Document>();
+        foreach (var file in files)
+        {
+            var document = await AddDocumentToFolderAsync(loginId, file, folderId);
+            uploadedDocuments.Add(document);
+        }
+
+        return uploadedDocuments;
     }
 }

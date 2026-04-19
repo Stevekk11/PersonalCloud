@@ -26,7 +26,7 @@
 <form id="uploadForm" asp-action="UploadFile" method="post" enctype="multipart/form-data" asp-route-culture="@culture">
     @Html.AntiForgeryToken()
     <input type="hidden" name="folderId" value="@currentFolderId" />
-    <input type="file" id="uploadInput" name="file" style="display:none" onchange="this.form.submit()" required />
+    <input type="file" id="uploadInput" name="files" style="display:none" onchange="this.form.submit()" multiple required />
 </form>
 
 @if (TempData["UploadError"] != null)

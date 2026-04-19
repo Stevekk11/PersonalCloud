@@ -86,47 +86,44 @@ public class DocumentController : Controller
 
 
     /// <summary>
-    /// Handles the file upload process for the currently authenticated user. The uploaded file is stored and associated with the user's account.
+    /// Handles the file upload process for the currently authenticated user. The uploaded files are stored and associated with the user's account.
     /// </summary>
-    /// <param name="file">The file being uploaded by the user.</param>
-    /// <param name="folderId">Optional folder ID to upload the file into.</param>
-    /// <returns>An <see cref="IActionResult"/> that redirects to the index page after the file is successfully uploaded or returns an error if the upload fails.</returns>
-    /// <exception cref="Exception">Thrown if no file is selected for upload or if an error occurs during file processing.</exception>
+    /// <param name="files">The list of files being uploaded by the user.</param>
+    /// <param name="folderId">Optional folder ID to upload the files into.</param>
+    /// <returns>An <see cref="IActionResult"/> that redirects to the index page after the files are successfully uploaded or returns an error if the upload fails.</returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UploadFile(IFormFile file, int? folderId = null)
+    public async Task<IActionResult> UploadFile(List<IFormFile> files, int? folderId = null)
     {
-        if (file == null || file.Length == 0)
+        if (files == null || files.Count == 0)
         {
-            TempData["UploadError"] = "No file selected.";
+            TempData["UploadError"] = "No files selected.";
             return RedirectToAction(nameof(Index), new { folderId });
         }
 
         var userId = GetCurrentUserId();
         try
         {
-            await _documentService.AddDocumentToFolderAsync(userId, file, folderId);
-            _logger.LogInformation($"User {User.Identity.Name} uploaded a new document with name {file.FileName}.");
+            await _documentService.AddDocumentsToFolderAsync(userId, files, folderId);
+            _logger.LogInformation($"User {User.Identity.Name} uploaded {files.Count} new documents.");
+            TempData["UploadSuccess"] = $"{files.Count} files uploaded successfully.";
         }
         catch (ArgumentException ex)
         {
             TempData["UploadError"] = ex.Message;
-            _logger.LogWarning(ex, "Upload blocked for user {User} with file {FileName}", User.Identity.Name,
-                file.FileName);
+            _logger.LogWarning(ex, "Upload blocked for user {User}", User.Identity.Name);
             return RedirectToAction(nameof(Index), new { folderId });
         }
         catch (InvalidOperationException ex)
         {
             TempData["UploadError"] = ex.Message;
-            _logger.LogWarning(ex, "Storage limit exceeded for user {User} with file {FileName}", User.Identity.Name,
-                file.FileName);
+            _logger.LogWarning(ex, "Storage limit exceeded for user {User}", User.Identity.Name);
             return RedirectToAction(nameof(Index), new { folderId });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error while uploading file {FileName} for user {User}", file.FileName,
-                User.Identity.Name);
-            TempData["UploadError"] = "An unexpected error occurred while uploading the file.";
+            _logger.LogError(ex, "Unexpected error while uploading files for user {User}", User.Identity.Name);
+            TempData["UploadError"] = "An unexpected error occurred while uploading the files.";
             return RedirectToAction(nameof(Index), new { folderId });
         }
 

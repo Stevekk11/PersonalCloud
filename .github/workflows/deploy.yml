@@ -20,4 +20,5 @@ jobs:
           script: |
             cd PersonalCloud
             git pull
+            dotnet add package SkiaSharp.NativeAssets.Linux --version 2.88.3
             pm2 restart PersonalCloud
