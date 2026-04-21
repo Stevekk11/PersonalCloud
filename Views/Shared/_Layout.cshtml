@@ -81,6 +81,13 @@
                             @Localizer["Logy"]
                         </a>
                     </li>
+                    <li class="nav-item m-1">
+                        <a class="nav-link text-dark d-flex align-items-center btn btn-sm btn-outline-primary" asp-controller="Home"
+                           asp-action="Mandelbrot" asp-route-culture="@culture">
+                            <i class="bi bi-fractal-tree me-2"></i>
+                            @Localizer["Mandelbrot"]
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item dropdown p-3">
@@ -110,7 +117,7 @@
         </div>
     </nav>
 </header>
-<div class="container">
+<div class="@(ViewData["IsFluid"] != null && (bool)ViewData["IsFluid"] ? "container-fluid" : "container")">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>

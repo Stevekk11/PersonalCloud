@@ -83,6 +83,12 @@ public class HomeController : Controller
         return Json(new { temperature, humidity });
     }
 
+    public IActionResult Mandelbrot()
+    {
+        _logger.LogInformation("Visiting Mandelbrot page.");
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

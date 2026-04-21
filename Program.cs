@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using PersonalCloud.Data;
@@ -167,6 +168,16 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
 app.MapStaticAssets();
+
+// Configure static files to serve .wasm files correctly
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".wasm"] = "application/wasm";
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
+
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "UserDocs")),
@@ -195,5 +206,10 @@ app.MapControllerRoute(
 
 app.MapRazorPages()
     .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "mandelbrot",
+    pattern: "Mandelbrot",
+    defaults: new { controller = "Home", action = "Mandelbrot" });
 
 app.Run();

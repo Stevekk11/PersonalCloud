@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Turbo Mandelbrot Explorer</title>
+  <meta name="description" content="High-performance Mandelbrot fractal explorer with WASM acceleration, smooth color palettes, and Julia set mode." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌌</text></svg>" />
+  <script type="module" crossorigin src="/dist/assets/index-BER9BafO.js"></script>
+  <link rel="stylesheet" crossorigin href="/dist/assets/index-DM2Al5Dz.css">
+</head>
+<body>
+  <!-- Fractal canvas (z-index 0, fills viewport) -->
+  <canvas id="fractal-canvas"></canvas>
+
+  <!-- ─── Top Bar ──────────────────────────────────────────── -->
+  <div id="top-bar">
+    <span class="title-gradient font-bold text-sm tracking-wide title-text select-none">
+       𝕿𝖍𝖊 𝖉𝖊𝖋𝖎𝖓𝖎𝖙𝖎𝖛𝖊 𝕸𝖆𝖓𝖉𝖊𝖑𝖇𝖗𝖔𝖙 𝖊𝖝𝖕𝖑𝖔𝖗𝖊𝖗.
+    </span>
+    <div style="flex:1"></div>
+    <button id="julia-btn" class="btn">🌀 <span class="btn-label"></span>J</button>
+      <button id="color-anim-btn" class="btn">🌈 <span class="btn-label">Animate</span></button>
+    <button id="shadows-btn"   class="btn">💡 <span class="btn-label">Shadows</span></button>
+    <button id="reset-btn"     class="btn">🏠 <span class="btn-label">Reset</span></button>
+    <button id="screenshot-btn" class="btn btn-icon" title="Save PNG">📸</button>
+    <button id="bookmark-btn"  class="btn btn-icon" title="Bookmark view">🔖</button>
+    <button id="help-btn"      class="btn btn-icon" title="Keyboard shortcuts">?</button>
+    <button id="settings-toggle" class="btn">⚙️ <span class="btn-label">Settings</span></button>
+  </div>
+
+  <!-- ─── Progress Bar ─────────────────────────────────────── -->
+  <div id="progress-container" class="hidden-bar">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- ─── HUD ──────────────────────────────────────────────── -->
+  <div id="mini-mandelbrot-container" style="display: none;">
+    <canvas id="mini-mandelbrot-canvas" width="150" height="150"></canvas>
+  </div>
+  <div id="hud">
+    <div id="quick-iter-container" title="Iterations">
+      <input id="quick-iter-slider" type="range" min="32" max="10000" value="256" step="32"/>
+      <span class="quick-slider-label">ITERATIONS</span>
+    </div>
+    <div id="quick-speed-container" title="Color Speed">
+      <input id="quick-speed-slider" type="range" min="0.1" max="8" step="0.2" value="0.8"/>
+      <span class="quick-slider-label">C. SPEED</span>
+    </div>
+    <button id="path-mode-btn" class="btn">📍 <span class="btn-label">Path</span></button>
+    <div class="hud-chip">🔍 <span id="zoom-counter">1.0×</span></div>
+    <div class="hud-chip">⟳ <span id="iter-counter">256</span> iter</div>
+    <div id="julia-coords" class="hud-chip" style="display:none;color:#a5b4fc">c = …</div>
+    <div style="flex:1"></div>
+    <div class="hud-chip hud-hint" style="font-size:0.65rem;color:#475569">
+      ⌨ R=Reset J=Julia P=Palette S=Screenshot H=Shadows C=Color ±Iter
+    </div>
+  </div>
+
+  <!-- ─── Settings Panel ───────────────────────────────────── -->
+  <div id="settings-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+      <span class="title-gradient" style="font-weight:700;font-size:0.875rem">⚙️ Settings</span>
+      <button id="settings-close" class="btn btn-icon" style="color:#94a3b8">✕</button>
+    </div>
+
+    <!-- Rendering -->
+    <div class="section-title">🧮 Rendering</div>
+    <label class="ctrl-label">Fractal Type</label>
+    <div>
+      <select id="fractal-type-select"
+              class="block w-full bg-gray-700 border-none rounded text-sm px-2 py-1 focus:ring focus:ring-blue-500">
+        <option value="0">🌌 Mandelbrot</option>
+        <option value="1">🔥 Burning Ship</option>
+        <option value="2">❄️ Tricorn</option>
+      </select>
+    </div>
+    <label class="ctrl-label" style="margin-top:0.5rem">Max Iterations</label>
+    <div class="ctrl-row">
+      <input id="iter-slider" type="range" min="32" max="10000" value="256" step="32"/>
+      <span class="ctrl-value"><span id="iter-display">256</span></span>
+    </div>
+
+    <!-- Palette -->
+    <div class="section-title">🎨 Color Palette</div>
+    <div>
+      <select id="palette-select"
+              class="block w-full bg-gray-700 border-none rounded text-sm px-2 py-1 focus:ring focus:ring-blue-500">
+        <option value="0">💎 Super 50</option>
+        <option value="1">🚀 Ultra Neon</option>
+        <option value="2">🌃 Cyberpunk</option>
+        <option value="3">🌌 Ultra Fractal</option>
+        <option value="4">🔥 Fire</option>
+        <option value="5">🌊 Ocean Deep</option>
+        <option value="6">◐ Monochrome</option>
+        <option value="7">🎲 Random</option>
+      </select>
+    </div>
+    <button id="random-palette-btn" class="btn" style="width:100%;margin-top:0.5rem">🎲 New Random Palette</button>
+    <div>
+      <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1 flex justify-between">
+        <span>Color Speed</span>
+        <span id="speed-display">0.8</span>×
+      </label>
+      <input id="speed-slider" type="range" min="0.1" max="8" step="0.2" value="0.8"
+             class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"/>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem">
+      <label class="block text-xs uppercase tracking-wider text-gray-400" for="shadows-checkbox">💡 3D Shadows</label>
+      <input id="shadows-checkbox" type="checkbox" style="width:1rem;height:1rem;cursor:pointer;accent-color:var(--clr-accent)"/>
+    </div>
+
+    <!-- Julia Set -->
+    <div class="section-title">🌀 Julia Set</div>
+    <label class="ctrl-label">c (real)</label>
+    <input id="julia-re" type="number" step="0.0001" value="-0.7269" />
+    <label class="ctrl-label">c (imaginary)</label>
+    <input id="julia-im" type="number" step="0.0001" value="0.1889" />
+
+    <div class="section-title" style="margin-top:0.25rem">Julia Presets</div>
+    <div class="julia-grid">
+      <button class="btn julia-preset" data-re="-0.7269" data-im="0.1889">Orbit Trap</button>
+      <button class="btn julia-preset" data-re="-0.4"    data-im="0.6"   >Dendrite</button>
+      <button class="btn julia-preset" data-re="0.285"   data-im="0.01"  >Crystal</button>
+      <button class="btn julia-preset" data-re="-1.476"  data-im="0.0"   >Basilica</button>
+      <button class="btn julia-preset" data-re="-0.835"  data-im="-0.2321">Rabbit</button>
+      <button class="btn julia-preset" data-re="0.0"     data-im="1.0"   >Siegel Disk</button>
+    </div>
+
+    <!-- Bookmarks -->
+    <div class="section-title">🔖 Locations</div>
+    <div id="bookmark-list"></div>
+
+    <!-- Info -->
+    <div class="section-title">ℹ️ Info</div>
+    <p style="font-size:0.7rem;color:#64748b;line-height:1.6;margin:0">
+      Powered by <strong style="color:#94a3b8">AssemblyScript WASM</strong> + Web Workers.<br>
+      Scroll to zoom · Drag to pan · Pinch on touch.
+    </p>
+  </div>
+
+  <!-- ─── Help Modal ────────────────────────────────────────── -->
+  <div id="help-modal" class="hidden">
+    <div id="help-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <h2 class="title-gradient" style="font-weight:700;font-size:1rem;margin:0">⌨️ Keyboard Shortcuts</h2>
+        <button id="help-close" class="btn btn-icon" style="color:#94a3b8">✕</button>
+      </div>
+      <div class="shortcut-row"><span>Reset view</span><kbd>R</kbd></div>
+      <div class="shortcut-row"><span>Toggle Julia mode</span><kbd>J</kbd></div>
+      <div class="shortcut-row"><span>Cycle palette</span><kbd>P</kbd></div>
+      <div class="shortcut-row"><span>Save screenshot</span><kbd>S</kbd></div>
+      <div class="shortcut-row"><span>Toggle 3D shadows</span><kbd>H</kbd></div>
+      <div class="shortcut-row"><span>Toggle color animation</span><kbd>C</kbd></div>
+      <div class="shortcut-row"><span>Increase iterations</span><kbd>+</kbd></div>
+      <div class="shortcut-row"><span>Decrease iterations</span><kbd>-</kbd></div>
+      <div class="shortcut-row"><span>Zoom in (center)</span><kbd>Z</kbd></div>
+      <div class="shortcut-row"><span>Zoom out (center)</span><kbd>X</kbd></div>
+      <div class="shortcut-row"><span>Pan</span><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></div>
+      <div class="shortcut-row"><span>Zoom in (click)</span><span>(Removed)</span></div>
+      <div class="shortcut-row"><span>Draw path to center</span><kbd>M</kbd></div>
+      <div class="shortcut-row"><span>Zoom</span><span>Scroll wheel</span></div>
+      <div class="shortcut-row"><span>Pan</span><span>Click &amp; drag</span></div>
+      <div class="shortcut-row"><span>Pinch zoom</span><span>Two-finger pinch</span></div>
+      <p style="font-size:0.7rem;color:#475569;margin-top:1rem;line-height:1.5">
+        Tip: In Julia mode, hover to explore different Julia parameters!
+      </p>
+    </div>
+  </div>
+
+  <div id="precision-tier-hint" class="precision-tier-hint">p: --</div>
+
+
+</body>
+</html>
