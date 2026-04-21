@@ -23,7 +23,7 @@ A modern, secure ASP.NET Core 9.0 web application for personal document storage 
 - **Document Management**: Upload, download, view, and delete personal documents
 - **Storage Quota Management**: 10 GB for regular users, 50 GB for premium users
 - **File Security**: Automatic content-type validation and protection against malicious file execution
-- **Large File Support**: Upload files up to 5 GB in size
+- **Large File Support**: Upload files up to 5 GB in size.
 
 ### Advanced Features
 - **Multi-language Support**: Full localization support for English and Czech
